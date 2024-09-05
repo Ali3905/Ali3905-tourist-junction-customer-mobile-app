@@ -1,22 +1,25 @@
 import React, { useState, useRef } from 'react';
 import { StyleSheet, StatusBar, View, Text, Image, TouchableOpacity, Dimensions, ScrollView, Modal } from 'react-native';
-// import { Video } from 'expo-av';
+import { Video } from 'expo-av';
 import Carousel from 'react-native-reanimated-carousel';
-// import { useGlobalContext } from '@/context/GlobalProvider';
+import { useGlobalContext } from '@/context/GlobalProvider';
 import { Redirect, router } from 'expo-router';
 import Loader from '@/components/loader';
 import { Colors } from '@/constants/Colors';
 import { GestureHandlerRootView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
-// import { BlurView } from 'expo-blur';
-// import { Path, Rect, Svg } from 'react-native-svg';
+import { BlurView } from 'expo-blur';
+import { Path, Rect, Svg } from 'react-native-svg';
 
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
 const carouselImages = [
+  require('@/assets/images/Banner1.png'),
+  require('@/assets/images/Janmashtmi.png'),
+  require('@/assets/images/ganpati.jpg'),
   require('@/assets/images/carousel1.png'),
   require('@/assets/images/carousel2.png'),
   require('@/assets/images/carousel3.png'),
@@ -46,7 +49,7 @@ const BlurOverlay: React.FC<BlurOverlayProps> = ({ visible, onRequestClose }) =>
 );
 
 export default function HomeScreen() {
-  // const { isLogged, loading, userData } = useGlobalContext();
+  const { isLogged, loading, userData } = useGlobalContext();
   const videoRef = useRef<Video>(null);
   const whatsNewVideoRef = useRef<Video>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -67,15 +70,15 @@ export default function HomeScreen() {
     setShowVideoModal(true);
   };
 
-  // if (!loading && !isLogged) return <Redirect href="/(modals)/onbording" />;
+  if (!loading && !isLogged) return <Redirect href="/(modals)/onbording" />;
 
-  // if (loading) {
-  //   return (
-  //     <View style={styles.container}>
-  //       <Loader loading />
-  //     </View>
-  //   );
-  // }
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Loader loading />
+      </View>
+    );
+  }
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -83,7 +86,7 @@ export default function HomeScreen() {
         padding: 20,
         backgroundColor: Colors.darkBlue,
       }}>
-        <Text style={{ fontSize: 15, fontWeight: '500', color: "white" }}>Hi, </Text>
+        <Text style={{ fontSize: 15, fontWeight: '500', color: "white" }}>Hi, {userData?.userName || userData?.name}</Text>
       </View>
       <ScrollView>
         <View style={styles.logoContainer}>
@@ -112,44 +115,27 @@ export default function HomeScreen() {
         <View style={styles.grid}>
           <TouchableOpacity onPress={() => router.push('daily_route_vehicles')} style={styles.gridItem}>
             <Image source={require('@/assets/images/route.png')} style={styles.icon} />
-            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Bus Tickets</Text>
+            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Daily Route Vehicles</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push('package_vehicle_booking')} style={styles.gridItem}>
+            <Image source={require('@/assets/images/package.png')} style={styles.icon} />
+            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Package Vehicle Booking</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push('holiday_yatra')} style={styles.gridItem}>
             <Image source={require('@/assets/images/holiday_new.png')} style={styles.iconEmpty} />
-            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Holiday's & Yatra</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('drivers_all')} style={styles.gridItem}>
-            <Image source={require('@/assets/images/emergency-driver-icon.png')} style={styles.icon} />
-            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Drivers for you</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('employee_list')} style={styles.gridItem}>
-            <Image source={require('@/assets/images/staff_details.png')} style={styles.icon} />
-            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Drivers for you</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('technician_support')} style={styles.gridItem}>
-            <Image source={require('@/assets/images/technician_support.png')} style={styles.icon} />
-            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Technicians</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('all_vehicle_list')} style={styles.gridItem}>
-            <Image source={require('@/assets/images/vehicle_management.png')} style={styles.icon} />
-            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Add my car</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('vehicle_documents')} style={styles.gridItem}>
-            <Image source={require('@/assets/images/vehicle_documents.png')} style={styles.icon} />
-            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Vehicle Documents</Text>
+            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Create Holiday's & Yatra</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push('vehicle_servicing_history')} style={styles.gridItem}>
             <Image source={require('@/assets/images/vehicle_servicing_history.png')} style={styles.icon} />
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Vehicle Servicing History</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('empty_vehicle_list')} style={styles.gridItem}>
-            <Image source={require('@/assets/images/empty-vehicle-icon.png')} style={styles.iconEmpty} />
-            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Sell Vehicles</Text>
+          <TouchableOpacity onPress={() => router.push('employee_list')} style={styles.gridItem}>
+            <Image source={require('@/assets/images/staff_details.png')} style={styles.icon} />
+            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Employee Details</Text>
           </TouchableOpacity>
-
-          {/* <TouchableOpacity onPress={() => router.push('package_vehicle_booking')} style={styles.gridItem}>
-            <Image source={require('@/assets/images/package.png')} style={styles.icon} />
-            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Package Vehicle Booking</Text>
+          <TouchableOpacity onPress={() => router.push('drivers_all')} style={styles.gridItem}>
+            <Image source={require('@/assets/images/emergency-driver-icon.png')} style={styles.icon} />
+            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Search Drivers</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push('drivers_list')} style={styles.gridItem}>
             <Image source={require('@/assets/images/drivers_list.png')} style={styles.icon} />
@@ -159,11 +145,27 @@ export default function HomeScreen() {
             <Image source={require('@/assets/images/cleaners_list.png')} style={styles.icon} />
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Cleaner's List</Text>
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push('vehicle_documents')} style={styles.gridItem}>
+            <Image source={require('@/assets/images/vehicle_documents.png')} style={styles.icon} />
+            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Vehicle Documents</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push('all_vehicle_list')} style={styles.gridItem}>
+            <Image source={require('@/assets/images/vehicle_management.png')} style={styles.icon} />
+            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">All Vehicle List</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push('technician_support')} style={styles.gridItem}>
+            <Image source={require('@/assets/images/technician_support.png')} style={styles.icon} />
+            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Technician Support</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push('empty_vehicle_list')} style={styles.gridItem}>
+            <Image source={require('@/assets/images/empty-vehicle-icon.png')} style={styles.iconEmpty} />
+            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Create Empty Vehicle Route</Text>
+          </TouchableOpacity>
          
           <TouchableOpacity onPress={() => router.push('search_empty_vehicle_list')} style={styles.gridItem}>
             <Image source={require('@/assets/images/search_vehicle.jpeg')} style={styles.iconEmpty} />
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail"> Search Empty Vehicle</Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
         </View>
 
         <View style={styles.dividerContainer}>
