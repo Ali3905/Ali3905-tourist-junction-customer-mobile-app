@@ -40,7 +40,7 @@ const BlurOverlay: React.FC<BlurOverlayProps> = ({ visible, onRequestClose }) =>
     onRequestClose={onRequestClose}
   >
     <TouchableWithoutFeedback onPress={onRequestClose}>
-      <BlurView intensity={90} tint="light" style={styles.overlay} />
+      {/* <BlurView intensity={90} tint="light" style={styles.overlay} /> */}
     </TouchableWithoutFeedback>
   </Modal>
 );
@@ -122,9 +122,9 @@ export default function HomeScreen() {
             <Image source={require('@/assets/images/emergency-driver-icon.png')} style={styles.icon} />
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Drivers for you</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('employee_list')} style={styles.gridItem}>
+          <TouchableOpacity onPress={() => router.push('hire_vehicles')} style={styles.gridItem}>
             <Image source={require('@/assets/images/staff_details.png')} style={styles.icon} />
-            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Drivers for you</Text>
+            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Hire Vehicles</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push('technician_support')} style={styles.gridItem}>
             <Image source={require('@/assets/images/technician_support.png')} style={styles.icon} />

@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import GlobalProvider from '@/context/GlobalProvider';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -27,11 +28,15 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <GlobalProvider>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
+
+        <Stack.Screen name="(modals)/drivers_all" options={{ headerShadowVisible: false, headerTitle: "Drivers for you", headerTitleAlign: "center" }} />
+        <Stack.Screen name='(modals)/hire_vehicles' options={{ headerShadowVisible: false, headerTitle: "Hire Vehicles", headerTitleAlign: "center" }} />
+        <Stack.Screen name='(modals)/technician_support' options={{ headerShadowVisible: false, headerTitle: "Technician Support", headerTitleAlign: "center" }} />
       </Stack>
-    </ThemeProvider>
+    </GlobalProvider>
   );
 }
