@@ -1,39 +1,48 @@
-import { ActivityIndicator, Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, Dimensions, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useGlobalContext } from '@/context/GlobalProvider'
 import { router } from 'expo-router'
-import Carousel from 'react-native-reanimated-carousel'
+// import Carousel from 'react-native-reanimated-carousel'
+import Carousel from '@/components/Carousel'
 import { Colors } from '@/constants/Colors'
+import { City } from 'country-state-city'
+import { Picker } from '@react-native-picker/picker'
+
+const deviceWidth = Dimensions.get('window').width;
+const deviceHeight = Dimensions.get('window').height;
 
 export default function HolidayYatraScreen() {
     const [tours, setTours] = useState<Tour[]>([])
+
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const { apiCaller } = useGlobalContext()
-    const [searchQuery, setSearchQuery] = useState("");
+
+    const [selectedLocation, setSelectedLocation] = useState<string>("")
+
+    const cities = City.getCitiesOfCountry("IN")
 
     const fetchTours = async () => {
         setIsLoading(true)
         try {
             const res = await apiCaller.get("/api/tour")
             setTours(res.data.data)
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
-            Alert.alert("Error", "Failed to add route. Please try again.");
+            console.log(error.response.data.message);
+            Alert.alert("Error", "Failed to fetch tours. Please try again.");
         } finally {
             setIsLoading(false)
         }
     }
 
 
-    const filterTours = (query: string) => {
+    const filterTours = () => {
         return tours.filter((tour) =>
-            Object.values(tour).some((value) =>
-                String(value).toLowerCase().includes(query.toLowerCase())
-            )
+            !selectedLocation ? true : tour.location?.toLowerCase().includes(selectedLocation.toLocaleLowerCase())
         );
     };
 
-
+    const filteredTours = selectedLocation ? filterTours() : tours
 
 
     useEffect(() => {
@@ -41,14 +50,30 @@ export default function HolidayYatraScreen() {
     }, [])
 
     return (
-        <View>
+        <View style={styles.container}>
+            <View style={styles.vehicleFilterContainer}>
+                <Picker
+                    selectedValue={selectedLocation}
+                    style={styles.vehiclePicker}
+                    onValueChange={item => setSelectedLocation(item)}
+                >
+                    <Picker.Item label="All Cities" value="" />
+                    {
+                        cities?.map((city) => (
+                            <Picker.Item label={city.name} value={city.name} />
+                        ))
+                    }
+                </Picker>
+            </View>
             {
                 isLoading ? (
                     <ActivityIndicator size="large" color={Colors.darkBlue} />
                 ) :
-                    filterTours(searchQuery).map((tour) => {
-                        return <TourCard tour={tour} />
-                    })
+                    <ScrollView style={styles.routesList}>
+                        {filteredTours.map((tour) => {
+                            return <TourCard tour={tour} />
+                        })}
+                    </ScrollView>
             }
         </View>
     )
@@ -61,8 +86,22 @@ const TourCard = ({ tour }: { tour: Tour }) => {
             <View style={styles.card}>
 
                 {/* <Image source={{ uri: tour.photo }} height={350} /> */}
-
-                <Carousel images={tour.photos} height={500} />
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    {/* <View style={{ position: 'relative' }}> */}
+                    <Carousel
+                        // width={deviceWidth * 0.9}
+                        // height={deviceWidth * 0.6}
+                        // // autoPlay
+                        // data={tour?.photos}
+                        // renderItem={({ item }) => (
+                        //     <Image source={{ uri: item }} style={styles.carouselImage} />
+                        // )}
+                        images={tour.photos}
+                        height={300}
+                    />
+                    {/* </View> */}
+                </View>
+                {/* <Image source={{ uri: item }} style={styles.carouselImage} /> */}
 
                 <Text style={styles.cardText}>{tour?.agencyName}<Text style={{ color: "black" }}></Text></Text>
                 <View style={{ padding: 1 }}>
@@ -80,7 +119,7 @@ const TourCard = ({ tour }: { tour: Tour }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 10,
+        padding: 15,
         backgroundColor: "#EAEAEA",
     },
     searchContainer: {
@@ -98,6 +137,24 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         color: Colors.secondary,
     },
+    carouselImage: {
+        height: deviceWidth * 0.5,
+        borderRadius: 10,
+        width: deviceWidth * 0.9,
+    },
+    vehicleFilterContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        borderWidth: 1,
+        borderColor: Colors.secondary,
+    },
+    vehiclePicker: {
+        flex: 1,
+        marginHorizontal: 2,
+        borderColor: Colors.secondary,
+        borderWidth: 1,
+        borderRadius: 5,
+    },
 
     notificationContainer: {
         marginVertical: 20,
@@ -106,21 +163,20 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 10,
     },
-    notificationText: {
-        color: '#ffffff',
-        fontSize: 16,
-        textAlign: 'center',
+    routesList: {
+        flex: 1
     },
     card: {
         backgroundColor: "#fff",
-        padding: 10,
+        padding: 4,
         borderRadius: 5,
+        marginBottom: 10,
+        paddingHorizontal: 8,
         elevation: 3,
         shadowColor: "#000",
         shadowOffset: { width: 2, height: 2 },
         shadowOpacity: 0.2,
         shadowRadius: 5,
-        marginBottom: 20,
 
     },
     cardHeader: {
@@ -147,7 +203,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: '100%',
-        height: height * 0.3,
+        height: deviceHeight * 0.3,
     },
     addButton: {
         backgroundColor: Colors.darkBlue,

@@ -36,6 +36,8 @@ export default function RootLayout() {
         <Stack.Screen name="(modals)/drivers_all" options={{ headerShadowVisible: false, headerTitle: "Drivers for you", headerTitleAlign: "center" }} />
         <Stack.Screen name='(modals)/hire_vehicles' options={{ headerShadowVisible: false, headerTitle: "Hire Vehicles", headerTitleAlign: "center" }} />
         <Stack.Screen name='(modals)/technician_support' options={{ headerShadowVisible: false, headerTitle: "Technician Support", headerTitleAlign: "center" }} />
+        <Stack.Screen name='(modals)/bus_tickets' options={{ headerShadowVisible: false, headerTitle: "Bus Tickets", headerTitleAlign: "center" }} />
+        <Stack.Screen name='(modals)/holiday_yatra' options={{ headerShadowVisible: false, headerTitle: "Holiday Yatra", headerTitleAlign: "center" }} />
       </Stack>
     </GlobalProvider>
   );

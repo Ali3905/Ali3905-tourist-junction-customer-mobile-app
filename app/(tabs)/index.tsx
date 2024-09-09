@@ -110,7 +110,7 @@ export default function HomeScreen() {
         </View>
 
         <View style={styles.grid}>
-          <TouchableOpacity onPress={() => router.push('daily_route_vehicles')} style={styles.gridItem}>
+          <TouchableOpacity onPress={() => router.push('bus_tickets')} style={styles.gridItem}>
             <Image source={require('@/assets/images/route.png')} style={styles.icon} />
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Bus Tickets</Text>
           </TouchableOpacity>

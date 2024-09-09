@@ -211,6 +211,7 @@ interface Vehicle {
   contactNumber: string;
   photos: string[];
   isAC: boolean;
+  isSleeper: boolean;
   isForRent: boolean;
   isForSell: boolean;
   type: string;
@@ -330,12 +331,7 @@ interface Cleaner {
 
 interface DailyRoute {
   _id: string;
-  vehicle: {
-    number: string,
-    photos: string[];
-    isAC: boolean;
-    isSleeper: boolean;
-  };
+  vehicle: Vehicle;
   agencyName: string;
   departurePlace: string;
   destinationPlace: string;
