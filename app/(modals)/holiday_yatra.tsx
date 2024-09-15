@@ -24,7 +24,7 @@ export default function HolidayYatraScreen() {
     const fetchTours = async () => {
         setIsLoading(true)
         try {
-            const res = await apiCaller.get("/api/tour")
+            const res = await apiCaller.get("/api/tour/agency/all")
             setTours(res.data.data)
         } catch (error: any) {
             console.log(error);

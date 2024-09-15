@@ -82,8 +82,13 @@ export default function HomeScreen() {
       <View style={{
         padding: 20,
         backgroundColor: Colors.darkBlue,
+        flexDirection: "row",
+        justifyContent: "space-between"
       }}>
         <Text style={{ fontSize: 15, fontWeight: '500', color: "white" }}>Hi, </Text>
+        <TouchableOpacity style={styles.loginButton} onPress={() => router.push('signup')}>
+          <Text>Login</Text>
+        </TouchableOpacity>
       </View>
       <ScrollView>
         <View style={styles.logoContainer}>
@@ -130,7 +135,7 @@ export default function HomeScreen() {
             <Image source={require('@/assets/images/technician_support.png')} style={styles.icon} />
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Technicians</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('all_vehicle_list')} style={styles.gridItem}>
+          <TouchableOpacity onPress={() => router.push('vehicle_list')} style={styles.gridItem}>
             <Image source={require('@/assets/images/vehicle_management.png')} style={styles.icon} />
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Add my car</Text>
           </TouchableOpacity>
@@ -147,23 +152,6 @@ export default function HomeScreen() {
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Sell Vehicles</Text>
           </TouchableOpacity>
 
-          {/* <TouchableOpacity onPress={() => router.push('package_vehicle_booking')} style={styles.gridItem}>
-            <Image source={require('@/assets/images/package.png')} style={styles.icon} />
-            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Package Vehicle Booking</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('drivers_list')} style={styles.gridItem}>
-            <Image source={require('@/assets/images/drivers_list.png')} style={styles.icon} />
-            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">My Driver</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('cleaners_list')} style={styles.gridItem}>
-            <Image source={require('@/assets/images/cleaners_list.png')} style={styles.icon} />
-            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Cleaner's List</Text>
-          </TouchableOpacity>
-         
-          <TouchableOpacity onPress={() => router.push('search_empty_vehicle_list')} style={styles.gridItem}>
-            <Image source={require('@/assets/images/search_vehicle.jpeg')} style={styles.iconEmpty} />
-            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail"> Search Empty Vehicle</Text>
-          </TouchableOpacity> */}
         </View>
 
         <View style={styles.dividerContainer}>
@@ -248,6 +236,13 @@ const styles = StyleSheet.create({
   },
   carouselContainer: {
     alignItems: 'center',
+  },
+  loginButton: {
+    backgroundColor: Colors.secondary,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 4
+
   },
   
   carouselImage: {

@@ -27,7 +27,7 @@ export default function BusTicketsScreen() {
     const fetchDailyRoutes = async () => {
         try {
             setIsLoading(true)
-            const res = await apiCaller.get("/api/busRoute/")
+            const res = await apiCaller.get("/api/busRoute/all")
             setDailyRoutes(res.data.data)
         } catch (error: any) {
             console.log(error);
