@@ -17,6 +17,7 @@ import { Colors } from "@/constants/Colors";
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useGlobalContext } from "@/context/GlobalProvider";
+import GoToLogin from "@/components/GoToLogin";
 
 interface BlurOverlayProps {
     visible: boolean;
@@ -60,7 +61,7 @@ const VehicleListScreen: React.FC = () => {
     const [showPhotoModal, setShowPhotoModal] = useState(false);
     const [idToDelete, setIdToDelete] = useState<null|string>(null);
     const [searchQuery, setSearchQuery] = useState("");
-    const { apiCaller, setEditData, refresh } = useGlobalContext();
+    const { apiCaller, setEditData, refresh, isLogged } = useGlobalContext();
 
     const filterByType = (data: Vehicle[], type: string): Vehicle[] => {
         return data.filter(vehicle => vehicle.type === type);
@@ -110,6 +111,10 @@ const VehicleListScreen: React.FC = () => {
 
     const filteredCars = searchQuery ? filterCars(searchQuery) : cars;
 
+    if (!isLogged) {
+        return <GoToLogin />
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.searchContainer}>
@@ -125,7 +130,7 @@ const VehicleListScreen: React.FC = () => {
                 />
             </View>
 
-            <TouchableOpacity onPress={() => router.push("add_car")} style={styles.addButton}>
+            <TouchableOpacity onPress={() => router.push("/add_car")} style={styles.addButton}>
                 <Text style={styles.addButtonText}>Add Car</Text>
             </TouchableOpacity>
 
@@ -136,7 +141,7 @@ const VehicleListScreen: React.FC = () => {
                     {filteredCars.map((car) => (
                         <View key={car._id} style={styles.card}>
                             <View style={styles.cardHeader}>
-                                <TouchableOpacity onPress={()=> {setEditData(car);router.push("edit_car")}} style={styles.editButton}>
+                                <TouchableOpacity onPress={()=> {setEditData(car);router.push("/edit_car")}} style={styles.editButton}>
                                     <Text style={styles.editButtonText}>Edit form</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => {setShowDeleteModal(true); setIdToDelete(car._id)}}>

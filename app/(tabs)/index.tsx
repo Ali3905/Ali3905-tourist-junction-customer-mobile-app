@@ -9,8 +9,8 @@ import { Colors } from '@/constants/Colors';
 import { GestureHandlerRootView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
-// import { BlurView } from 'expo-blur';
-// import { Path, Rect, Svg } from 'react-native-svg';
+import { useGlobalContext } from '@/context/GlobalProvider';
+import * as SecureStore from "expo-secure-store";
 
 
 const deviceWidth = Dimensions.get('window').width;
@@ -46,36 +46,35 @@ const BlurOverlay: React.FC<BlurOverlayProps> = ({ visible, onRequestClose }) =>
 );
 
 export default function HomeScreen() {
-  // const { isLogged, loading, userData } = useGlobalContext();
-  const videoRef = useRef<Video>(null);
-  const whatsNewVideoRef = useRef<Video>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [selectedVideo, setSelectedVideo] = useState(false);
   const [showVideoModal, setShowVideoModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
+  const { isLogged, setIsLogged, setToken, setRefresh, userData } = useGlobalContext()
 
-  const handlePlayPause = () => {
-    if (isPlaying) {
-      videoRef.current?.pauseAsync();
-    } else {
-      videoRef.current?.playAsync();
+  const handleLogout = async () => {
+    setIsLoading(true);
+    try {
+      await SecureStore.deleteItemAsync("access_token");
+      setIsLogged(false);
+      setToken(null);
+      setRefresh(prev => !prev)
+      router.push('/')
+    } catch (error) {
+      console.error("Error during logout:", error);
+    } finally {
+      setIsLoading(false)
     }
-    setIsPlaying(!isPlaying);
   };
 
-  const handleViewVideo = (isVideo1: boolean) => {
-    setSelectedVideo(isVideo1);
-    setShowVideoModal(true);
-  };
 
-  // if (!loading && !isLogged) return <Redirect href="/(modals)/onbording" />;
 
-  // if (loading) {
-  //   return (
-  //     <View style={styles.container}>
-  //       <Loader loading />
-  //     </View>
-  //   );
-  // }
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <Loader loading />
+      </View>
+    );
+  }
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -85,17 +84,19 @@ export default function HomeScreen() {
         flexDirection: "row",
         justifyContent: "space-between"
       }}>
-        <Text style={{ fontSize: 15, fontWeight: '500', color: "white" }}>Hi, </Text>
-        <TouchableOpacity style={styles.loginButton} onPress={() => router.push('signup')}>
-          <Text>Login</Text>
-        </TouchableOpacity>
+        <Text style={{ fontSize: 15, fontWeight: '500', color: "white" }}>Hi, {userData?.userName}</Text>
+        {!isLogged ? <TouchableOpacity style={styles.loginButton} onPress={() => router.push('/signup')}>
+          <Text>Signup</Text>
+        </TouchableOpacity> : <TouchableOpacity style={styles.loginButton} onPress={handleLogout}>
+          <Text>Logout</Text>
+        </TouchableOpacity>}
       </View>
       <ScrollView>
         <View style={styles.logoContainer}>
           <Image source={require('@/assets/images/logo.png')} style={styles.image} />
         </View>
 
-        
+
         <View style={styles.carouselContainer}>
           <Carousel
             width={deviceWidth * 0.9}
@@ -115,39 +116,39 @@ export default function HomeScreen() {
         </View>
 
         <View style={styles.grid}>
-          <TouchableOpacity onPress={() => router.push('bus_tickets')} style={styles.gridItem}>
+          <TouchableOpacity onPress={() => router.push('/bus_tickets')} style={styles.gridItem}>
             <Image source={require('@/assets/images/route.png')} style={styles.icon} />
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Bus Tickets</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('holiday_yatra')} style={styles.gridItem}>
+          <TouchableOpacity onPress={() => router.push('/holiday_yatra')} style={styles.gridItem}>
             <Image source={require('@/assets/images/holiday_new.png')} style={styles.iconEmpty} />
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Holiday's & Yatra</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('drivers_all')} style={styles.gridItem}>
+          <TouchableOpacity onPress={() => router.push('/drivers_all')} style={styles.gridItem}>
             <Image source={require('@/assets/images/emergency-driver-icon.png')} style={styles.icon} />
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Drivers for you</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('hire_vehicles')} style={styles.gridItem}>
+          <TouchableOpacity onPress={() => router.push('/hire_vehicles')} style={styles.gridItem}>
             <Image source={require('@/assets/images/staff_details.png')} style={styles.icon} />
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Hire Vehicles</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('technician_support')} style={styles.gridItem}>
+          <TouchableOpacity onPress={() => router.push('/technician_support')} style={styles.gridItem}>
             <Image source={require('@/assets/images/technician_support.png')} style={styles.icon} />
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Technicians</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('vehicle_list')} style={styles.gridItem}>
+          <TouchableOpacity onPress={() => router.push('/vehicle_list')} style={styles.gridItem}>
             <Image source={require('@/assets/images/vehicle_management.png')} style={styles.icon} />
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Add my car</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('vehicle_documents')} style={styles.gridItem}>
+          <TouchableOpacity onPress={() => router.push('/vehicle_documents')} style={styles.gridItem}>
             <Image source={require('@/assets/images/vehicle_documents.png')} style={styles.icon} />
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Vehicle Documents</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('vehicle_servicing_history')} style={styles.gridItem}>
+          <TouchableOpacity onPress={() => router.push('/vehicle_servicing_history')} style={styles.gridItem}>
             <Image source={require('@/assets/images/vehicle_servicing_history.png')} style={styles.icon} />
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Vehicle Servicing History</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('empty_vehicle_list')} style={styles.gridItem}>
+          <TouchableOpacity onPress={() => router.push('/')} style={styles.gridItem}>
             <Image source={require('@/assets/images/empty-vehicle-icon.png')} style={styles.iconEmpty} />
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Sell Vehicles</Text>
           </TouchableOpacity>
@@ -159,7 +160,7 @@ export default function HomeScreen() {
             <Text style={styles.dividerText}>Social Connect</Text>
           </View>
         </View>
-      
+
         <View style={styles.socialMediaContainer}>
           <TouchableOpacity
             style={styles.socialMediaIcon}
@@ -186,12 +187,12 @@ export default function HomeScreen() {
 
         <View style={styles.dividerContainer}>
           <View style={styles.divider}>
-            <Text style={styles.dividerText}>Contact Us</Text>           
+            <Text style={styles.dividerText}>Contact Us</Text>
           </View>
-          <Text style={{marginVertical:10, marginTop:17, fontSize:15}}>touristjunction8@gmail.com</Text>
+          <Text style={{ marginVertical: 10, marginTop: 17, fontSize: 15 }}>touristjunction8@gmail.com</Text>
         </View>
       </ScrollView>
-     
+
 
       <Modal
         animationType="slide"
@@ -200,7 +201,7 @@ export default function HomeScreen() {
         onRequestClose={() => setShowVideoModal(false)}
       >
         <BlurOverlay visible={showVideoModal} onRequestClose={() => setShowVideoModal(false)} />
-{/* 
+        {/* 
         <View style={styles.modalContainer}>
           <View style={!selectedVideo ? styles.modalContentOverdide : styles.modalContent}>
             <Video
@@ -244,7 +245,7 @@ const styles = StyleSheet.create({
     borderRadius: 4
 
   },
-  
+
   carouselImage: {
     height: deviceWidth * 0.5,
     borderRadius: 10,
@@ -276,7 +277,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginVertical: 20,
   },
- 
+
   gridItem: {
     width: '30%', // Approximate one-third of the screen
     alignItems: 'center',

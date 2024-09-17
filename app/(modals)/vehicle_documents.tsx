@@ -19,6 +19,7 @@ import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import * as Sharing from 'expo-sharing';
+import GoToLogin from "@/components/GoToLogin";
 
 interface BlurOverlayProps {
     visible: boolean;
@@ -57,7 +58,7 @@ const VehicleListScreen: React.FC = () => {
     const [showImageModal, setShowImageModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
-    const { apiCaller, setEditData, refresh, userData } = useGlobalContext();
+    const { apiCaller, setEditData, refresh, isLogged } = useGlobalContext();
     const [isFullSize, setIsFullSize] = useState<boolean>(false);
 
     const fetchVehicles = async () => {
@@ -90,7 +91,7 @@ const VehicleListScreen: React.FC = () => {
 
     const handleSearch = (query: string) => {
         setSearchQuery(query);
-        const filtered = vehicles.filter(vehicle => 
+        const filtered = filteredVehicles.filter(vehicle => 
             vehicle.number.toLowerCase().includes(query.toLowerCase())
         );
         setFilteredVehicles(filtered);
@@ -109,6 +110,10 @@ const VehicleListScreen: React.FC = () => {
         setShowImageModal(true);
     };
 
+    if (!isLogged) {
+        return <GoToLogin />
+    }
+
     
     return (
         <SafeAreaView style={styles.container}>
@@ -123,7 +128,7 @@ const VehicleListScreen: React.FC = () => {
                 />
             </View>
 
-            <TouchableOpacity onPress={() => router.push("add_vehicle_documents")} style={styles.addButton}>
+            <TouchableOpacity onPress={() => router.push("/add_vehicle_documents")} style={styles.addButton}>
                 <Text style={styles.addButtonText}>Add Vehicle & Document</Text>
             </TouchableOpacity>
 
@@ -134,7 +139,7 @@ const VehicleListScreen: React.FC = () => {
                     {filteredVehicles.map((vehicle) => (
                         <View key={vehicle._id} style={styles.card}>
                             <View style={styles.cardHeader}>
-                                <TouchableOpacity onPress={()=> {setEditData(vehicle); router.push("edit_vehicle_documents")}} style={styles.editButton}>
+                                <TouchableOpacity onPress={()=> {setEditData(vehicle); router.push("/edit_vehicle_documents")}} style={styles.editButton}>
                                     <Text style={styles.editButtonText}>Edit form</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => { setShowDeleteModal(true); setSelectedVehicleId(vehicle._id); }}>
@@ -182,7 +187,7 @@ const VehicleListScreen: React.FC = () => {
                             <TouchableOpacity style={[styles.modalButton, { backgroundColor: "#ccc" }]} onPress={() => setShowDeleteModal(false)}>
                                 <Text style={styles.modalButtonText}>Cancel</Text>
                             </TouchableOpacity>
-                         <TouchableOpacity style={styles.downloadButton} onPress={() => handleDownloadImage(selectedImage)}>
+                         <TouchableOpacity style={styles.downloadButton} onPress={() => handleDownloadImage(selectedImage?selectedImage:"")}>
                             <Text style={styles.downloadButtonText}>Download</Text>
                         </TouchableOpacity>
                             <TouchableOpacity style={[styles.modalButton, { backgroundColor: Colors.darkBlue }]} onPress={handleDelete}>
@@ -234,10 +239,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    modalImage: {
-        width: 300,
-        height: 400,
-    },
+
     fullSizeImage: {
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,

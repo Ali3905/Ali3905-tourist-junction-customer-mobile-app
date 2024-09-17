@@ -48,7 +48,7 @@ const baseURL = process.env.EXPO_PUBLIC_URL as string;
 const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
   const [isLogged, setIsLogged] = useState<boolean>(false);
   // const [token, setToken] = useState<string | null>(null);
-  const [token, setToken] = useState<string | null>("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmQ4NmVhZTVlNWZjMDVmOTQwODg3M2MiLCJyb2xlIjoiQUdFTkNZIiwiaWF0IjoxNzI1ODYwMjgxfQ.6B3ohox8ktmZ0Te4XdF3XIb0Ky8gIiWhyepwVJERwIA");
+  const [token, setToken] = useState<string | null>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [userData, setUserData] = useState<User | null>(null);
   const [editData, setEditData] = useState<any>()
@@ -85,16 +85,16 @@ const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
     },
   });
 
-  // async function fetchUser() {
-  //   const response = await apiCaller.get('/api/user/');
-  //   setUserData(response.data.data)
-  // }
+  async function fetchUser() {
+    const response = await apiCaller.get('/api/user/');
+    setUserData(response.data.data)
+  }
 
-  // useEffect(() => {
-  //   if (token) {
-  //     fetchUser()
-  //   }
-  // }, [token, refresh])
+  useEffect(() => {
+    if (token) {
+      fetchUser()
+    }
+  }, [token, refresh])
 
   apiCaller.interceptors.response.use(
     (response) => response,

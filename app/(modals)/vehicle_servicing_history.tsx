@@ -18,6 +18,7 @@ import { Colors } from "@/constants/Colors";
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useGlobalContext } from "@/context/GlobalProvider";
+import GoToLogin from "@/components/GoToLogin";
 
 interface BlurOverlayProps {
     visible: boolean;
@@ -55,7 +56,7 @@ const ServiceHistoryScreen: React.FC = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [idToDelete, setIdToDelete] = useState<null | string>(null)
     const [searchQuery, setSearchQuery] = useState("");
-    const { apiCaller, setEditData, refresh, userData } = useGlobalContext();
+    const { apiCaller, setEditData, refresh, isLogged } = useGlobalContext();
     const [vehicleNumbers, setVehicleNumbers] = useState<{ id: string, number: string }[]>([]);
 
     const findVehicleByNumber = (id: string) => {
@@ -144,6 +145,10 @@ const ServiceHistoryScreen: React.FC = () => {
         fetchVehicles();
     }, []);
 
+    if (!isLogged) {
+        return <GoToLogin />
+    }
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -160,7 +165,7 @@ const ServiceHistoryScreen: React.FC = () => {
                 />
             </View>
 
-            <TouchableOpacity onPress={() => router.push("add_vehicle_servicing_history")} style={styles.addButton}>
+            <TouchableOpacity onPress={() => router.push("/add_vehicle_servicing_history")} style={styles.addButton}>
                 <Text style={styles.addButtonText}>Add Vehicle</Text>
             </TouchableOpacity>
 
@@ -171,7 +176,7 @@ const ServiceHistoryScreen: React.FC = () => {
                     {filteredServiceHistory.map((record, index) => (
                         <View key={index} style={styles.card}>
                             <View style={styles.cardHeader}>
-                                <TouchableOpacity onPress={() => { setEditData(record); router.push("edit_vehicle_servicing_history") }} style={styles.editButton}>
+                                <TouchableOpacity onPress={() => { setEditData(record); router.push("/edit_vehicle_servicing_history") }} style={styles.editButton}>
                                     <Text style={styles.editButtonText}>Edit form</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => { setShowDeleteModal(true); setIdToDelete(record._id) }}>

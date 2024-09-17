@@ -18,6 +18,7 @@ import { Colors } from "@/constants/Colors";
 import RadioButtonGroup, { RadioButtonItem } from "expo-radio-button";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import { router } from "expo-router";
+import GoToLogin from "@/components/GoToLogin";
 
 const AddCarScreen: React.FC = () => {
     const [vehicleNo, setVehicleNo] = useState("");
@@ -31,7 +32,7 @@ const AddCarScreen: React.FC = () => {
     const [selectedForSell, setSelectedForSell] = useState<boolean>(false);
     const [carImages, setCarImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
     const [loading, setLoading] = useState(false);
-    const { apiCaller, setRefresh } = useGlobalContext();
+    const { apiCaller, setRefresh, isLogged } = useGlobalContext();
 
     const handleAddCar = async () => {
         if (!vehicleNo || !seatingCapacity || !vehicleModel || !location || !carName || !contactNo || carImages.length === 0) {
@@ -111,6 +112,10 @@ const AddCarScreen: React.FC = () => {
         setSelectedForSell(false);
         setCarImages([]);
     };
+
+    if (!isLogged) {
+        return <GoToLogin />
+    }
 
     return (
         <SafeAreaView style={styles.container}>
