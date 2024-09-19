@@ -148,7 +148,7 @@ export default function HomeScreen() {
             <Image source={require('@/assets/images/vehicle_servicing_history.png')} style={styles.icon} />
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Vehicle Servicing History</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('/')} style={styles.gridItem}>
+          <TouchableOpacity onPress={() => router.push('/sell_vehicle_list')} style={styles.gridItem}>
             <Image source={require('@/assets/images/empty-vehicle-icon.png')} style={styles.iconEmpty} />
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Sell Vehicles</Text>
           </TouchableOpacity>

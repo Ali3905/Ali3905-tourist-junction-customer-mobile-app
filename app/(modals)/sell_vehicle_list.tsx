@@ -12,12 +12,13 @@ import {
     TouchableOpacity,
     Modal,
 } from "react-native";
-import PagerView from "react-native-pager-view";
+// import PagerView from "react-native-pager-view";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import { BlurView } from 'expo-blur';
 import { Picker } from "@react-native-picker/picker";
+import Carousel from "@/components/Carousel";
 
 const { width: viewportWidth } = Dimensions.get("window");
 
@@ -54,6 +55,9 @@ const BlurOverlay: React.FC<BlurOverlayProps> = ({ visible, onRequestClose }) =>
         </TouchableOpacity>
     </Modal>
 );
+
+const deviceWidth = Dimensions.get('window').width;
+const deviceHeight = Dimensions.get('window').height;
 
 const SellVehicleScreen: React.FC = () => {
     const [activeSlide, setActiveSlide] = useState(0);
@@ -147,14 +151,18 @@ const SellVehicleScreen: React.FC = () => {
                 ) : (
                     filteredVehicles.map((vehicle, index) => (
                         <View key={index} style={styles.card}>
-                            <PagerView
+                            {/* <PagerView
                                 style={styles.pagerView}
                                 initialPage={0}
                                 onPageSelected={(e) => setActiveSlide(e.nativeEvent.position)}
                                 useNext={true}
                             >
                                 {vehicle.photos.map((photo, photoIndex) => renderPagerItem(photo, photoIndex))}
-                            </PagerView>
+                            </PagerView> */}
+                            <Carousel
+                            images={vehicle?.photos}
+                            height={deviceWidth * 0.6}
+                            />
                             <View style={styles.paginationContainer}>
                                 {vehicle.photos.map((_, photoIndex) => (
                                     <View

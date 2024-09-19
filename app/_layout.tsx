@@ -61,6 +61,7 @@ export default function RootLayout() {
         <Stack.Screen name='(modals)/vehicle_documents' options={{ headerShadowVisible: false, headerTitle: "Vehicle Documents", headerTitleAlign: "center" }} />
         <Stack.Screen name='(modals)/add_vehicle_documents' options={{ headerShadowVisible: false, headerTitle: "Add Vehicle documents", headerTitleAlign: "center" }} />
         <Stack.Screen name='(modals)/edit_vehicle_documents' options={{ headerShadowVisible: false, headerTitle: "Edit Vehicle documents", headerTitleAlign: "center" }} />
+        <Stack.Screen name='(modals)/sell_vehicle_list' options={{ headerShadowVisible: false, headerTitle: "Sell Vehicle List", headerTitleAlign: "center" }} />
       </Stack>
     </GlobalProvider>
   );
