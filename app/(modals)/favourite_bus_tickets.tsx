@@ -8,16 +8,15 @@ import CustomButton from "@/components/CustomButton"
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons'
 import { City } from 'country-state-city'
 import { Picker } from '@react-native-picker/picker'
-import { router } from 'expo-router'
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
-export default function BusTicketsScreen() {
+export default function FavouriteBusTicketsScreen() {
 
     const [dailyRoutes, setDailyRoutes] = useState<DailyRoute[]>([])
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const { apiCaller } = useGlobalContext()
+    const [isLoading, setIsLoading] = useState<boolean>(true)
+    const { apiCaller, refresh } = useGlobalContext()
     const cities = City.getCitiesOfCountry("IN")
     const [selectedDepPlace, setSelectedDepPlace] = useState<string>("")
     const [selectedDestPlace, setSelectedDestPlace] = useState<string>("")
@@ -27,7 +26,7 @@ export default function BusTicketsScreen() {
     const fetchDailyRoutes = async () => {
         try {
             setIsLoading(true)
-            const res = await apiCaller.get("/api/busRoute/all")
+            const res = await apiCaller.get("/api/busRoute/favouriteBusRoutes")
             setDailyRoutes(res.data.data)
         } catch (error: any) {
             console.log(error);
@@ -39,7 +38,8 @@ export default function BusTicketsScreen() {
 
     useEffect(() => {
         fetchDailyRoutes()
-    }, [])
+    }, [refresh])
+
     const filterDailyRoutes = () => {
         return dailyRoutes.filter((route) => {
             return !selectedDepPlace ? true : route.departurePlace.toLowerCase().includes(selectedDepPlace.toLowerCase()) && !selectedDestPlace ? true : route.destinationPlace.toLowerCase().includes(selectedDestPlace.toLowerCase())
@@ -47,6 +47,10 @@ export default function BusTicketsScreen() {
     }
 
     const filteredRoutes = selectedDepPlace || selectedDestPlace ? filterDailyRoutes() : dailyRoutes
+
+    if (!filteredRoutes || filteredRoutes.length < 1 && !isLoading ) {
+        return <Text style={{ textAlign: "center", marginTop: 10 }}>No Favourite Routes</Text>
+    }
 
 
     return (
@@ -80,17 +84,13 @@ export default function BusTicketsScreen() {
                 </Picker>
             </View>
 
-            <TouchableOpacity onPress={() => router.push("/favourite_bus_tickets")} style={styles.addButton}>
-                <Text style={styles.addButtonText}>Favourite Routes</Text>
-            </TouchableOpacity>
-
 
 
             {isLoading ? (
                 <ActivityIndicator size="large" color={Colors.darkBlue} />
             ) : (
                 <ScrollView style={styles.routesList}>
-                    {filteredRoutes.map((route) => (
+                    {filteredRoutes?.map((route) => (
                         <BusTicketCard route={route} />
                     ))}
                 </ScrollView>
@@ -104,16 +104,17 @@ function BusTicketCard({ route }: { route: DailyRoute }) {
     const [isDriverModalVisible, setIsDriverModalVisible] = useState<string | null>(null);
     const [isChartModalVisible, setIsChartModalVisible] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false)
-    const { apiCaller } = useGlobalContext()
+    const { apiCaller, setRefresh } = useGlobalContext()
 
     const handleAddToFavourite = async (id: string) => {
         setIsLoading(true)
         try {
-            const res = await apiCaller.patch(`/api/busRoute/addToFavourite?routeId=${id}`)
-            Alert.alert("Success", "This route have been added to the favourites")
+            const res = await apiCaller.delete(`/api/busRoute/removeFromFavourite?routeId=${id}`)
+            Alert.alert("Success", "This route have been removed from the favourites")
+            setRefresh(prev => !prev)
         } catch (error: any) {
             console.log(error?.response?.data?.message || error);
-            Alert.alert("Error", error?.response?.data?.message || "Could not add to favourites")
+            Alert.alert("Error", error?.response?.data?.message || "Could not remove from favourites")
         } finally {
             setIsLoading(false)
         }
@@ -138,7 +139,7 @@ function BusTicketCard({ route }: { route: DailyRoute }) {
                     <View style={styles.circle}>
                         <Text style={styles.circleText}>{route?.vehicle.isAC ? "AC" : "Non-AC"}</Text>
                         <Text style={styles.circleText}>{route?.vehicle.isSleeper ? "Sleeper" : "Seater"}</Text>
-                        <Text style={styles.circleText}>{route?.vehicle?.number.toUpperCase()}</Text>
+                        <Text style={styles.circleText}>{route?.vehicle?.number?.toUpperCase()}</Text>
                     </View>
                 </View>
             </View>
@@ -328,7 +329,7 @@ function BusTicketCard({ route }: { route: DailyRoute }) {
                             {isLoading ? (
                                 <ActivityIndicator color="#fff" />
                             ) : (
-                                <Text style={[styles.modalButtonText, { color: "#fff" }]}>Add To Favourite</Text>
+                                <Text style={[styles.modalButtonText, { color: "#fff" }]}>Remove From Favourite</Text>
                             )}
                         </TouchableOpacity>
                     </View>

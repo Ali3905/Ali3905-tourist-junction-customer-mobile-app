@@ -11,11 +11,11 @@ import { Picker } from '@react-native-picker/picker'
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
-export default function HolidayYatraScreen() {
+export default function FavouriteHolidayYatraScreen() {
     const [tours, setTours] = useState<Tour[]>([])
 
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const { apiCaller } = useGlobalContext()
+    const [isLoading, setIsLoading] = useState<boolean>(true)
+    const { apiCaller, refresh } = useGlobalContext()
 
     const [selectedLocation, setSelectedLocation] = useState<string>("")
 
@@ -24,7 +24,7 @@ export default function HolidayYatraScreen() {
     const fetchTours = async () => {
         setIsLoading(true)
         try {
-            const res = await apiCaller.get("/api/tour/agency/all")
+            const res = await apiCaller.get("/api/tour/customer/favouriteTours")
             setTours(res.data.data)
         } catch (error: any) {
             console.log(error);
@@ -47,7 +47,11 @@ export default function HolidayYatraScreen() {
 
     useEffect(() => {
         fetchTours()
-    }, [])
+    }, [refresh])
+
+    if (!isLoading && (!filteredTours || filteredTours.length < 1)) {
+        return <Text style={{ textAlign: "center", marginTop: 10 }}>No Favourite Tours to show</Text>
+    }
 
     return (
         <View style={styles.container}>
@@ -65,9 +69,6 @@ export default function HolidayYatraScreen() {
                     }
                 </Picker>
             </View>
-            <TouchableOpacity onPress={() => router.push("/favourite_holiday_yatra")} style={styles.addButton}>
-                <Text style={styles.addButtonText}>Favourite Holiday Yatra</Text>
-            </TouchableOpacity>
             {
                 isLoading ? (
                     <ActivityIndicator size="large" color={Colors.darkBlue} />
@@ -85,13 +86,14 @@ export default function HolidayYatraScreen() {
 const TourCard = ({ tour }: { tour: Tour }) => {
 
     const [isLoading, setIsLoading] = useState(false)
-    const { apiCaller } = useGlobalContext()
+    const { apiCaller, setRefresh } = useGlobalContext()
 
     const handleAddToFavourite = async (id: string) => {
         setIsLoading(true)
         try {
-            const res = await apiCaller.patch(`/api/tour/addToFavourite?tourId=${id}`)
-            Alert.alert("Success", "This tour have been added to the favourites")
+            const res = await apiCaller.delete(`/api/tour/removeFromFavourite?tourId=${id}`)
+            Alert.alert("Success", "This tour have been removed from the favourites")
+            setRefresh(prev => !prev)
         } catch (error: any) {
             console.log(error?.response?.data?.message || error);
             Alert.alert("Error", error?.response?.data?.message || "Could not add to favourites")
@@ -137,7 +139,7 @@ const TourCard = ({ tour }: { tour: Tour }) => {
                         {isLoading ? (
                             <ActivityIndicator color="#fff" />
                         ) : (
-                            <Text style={[styles.modalButtonText, { color: "#fff" }]}>Add To Favourite</Text>
+                            <Text style={[styles.modalButtonText, { color: "#fff" }]}>Remove From Favourite</Text>
                         )}
                     </TouchableOpacity>
                 </View>
