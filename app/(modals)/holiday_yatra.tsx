@@ -85,7 +85,7 @@ export default function HolidayYatraScreen() {
 const TourCard = ({ tour }: { tour: Tour }) => {
 
     const [isLoading, setIsLoading] = useState(false)
-    const { apiCaller } = useGlobalContext()
+    const { apiCaller, isLogged } = useGlobalContext()
 
     const handleAddToFavourite = async (id: string) => {
         setIsLoading(true)
@@ -129,7 +129,8 @@ const TourCard = ({ tour }: { tour: Tour }) => {
                 <Text style={styles.cardText}>Office Address:  <Text style={{ color: "black" }}>{tour?.officeAddress}</Text></Text>
                 <Text style={styles.cardText}>Tour Name: <Text style={{ color: "black" }}>{tour?.name}</Text></Text>
                 <Text style={styles.cardText}>Location: <Text style={{ color: "black" }}>{tour?.location}</Text></Text>
-                <View style={styles.modalButtons}>
+                <Text style={styles.cardText}>Mobile Number: <Text style={{ color: "black" }}>{tour?.primaryMobileNumber}</Text></Text>
+                {isLogged && <View style={styles.modalButtons}>
                     <TouchableOpacity
                         style={[styles.modalButton, { backgroundColor: Colors.darkBlue }]}
                         onPress={() => handleAddToFavourite(tour._id)}
@@ -140,7 +141,7 @@ const TourCard = ({ tour }: { tour: Tour }) => {
                             <Text style={[styles.modalButtonText, { color: "#fff" }]}>Add To Favourite</Text>
                         )}
                     </TouchableOpacity>
-                </View>
+                </View>}
             </View>
 
         </>

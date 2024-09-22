@@ -51,7 +51,7 @@ const AddVehicleDocumentsScreen: React.FC = () => {
     }, []);
 
     const handleAddVehicleDocuments = async () => {
-        if (!vehicleNumber || !rcImage || !insuranceImage || !permitImage || !fitnessImage || !taxImage || !pucImage) {
+        if (!vehicleNumber || !rcImage || !insuranceImage || !pucImage) {
             Alert.alert("Please fill all fields and upload all documents.");
             return;
         }
@@ -67,21 +67,6 @@ const AddVehicleDocumentsScreen: React.FC = () => {
             uri: insuranceImage.uri,
             type: 'image/jpeg',
             name: 'insurance.jpg',
-        } as any);
-        formData.append('permit', {
-            uri: permitImage.uri,
-            type: 'image/jpeg',
-            name: 'permit.jpg',
-        } as any);
-        formData.append('fitness', {
-            uri: fitnessImage.uri,
-            type: 'image/jpeg',
-            name: 'fitness.jpg',
-        } as any);
-        formData.append('tax', {
-            uri: taxImage.uri,
-            type: 'image/jpeg',
-            name: 'tax.jpg',
         } as any);
         formData.append('PUC', {
             uri: pucImage.uri,
@@ -166,36 +151,6 @@ const AddVehicleDocumentsScreen: React.FC = () => {
                             <Text style={styles.imagePickerText}>Upload Insurance</Text>
                         </TouchableOpacity>
                         {insuranceImage && <Image source={{ uri: insuranceImage.uri }} style={styles.previewImage} />}
-                    </View>
-
-                    <View style={styles.inputGroup}>
-                        <TouchableOpacity
-                            style={styles.imagePicker}
-                            onPress={() => handleImagePicker(setPermitImage)}
-                        >
-                            <Text style={styles.imagePickerText}>Upload Permit</Text>
-                        </TouchableOpacity>
-                        {permitImage && <Image source={{ uri: permitImage.uri }} style={styles.previewImage} />}
-                    </View>
-
-                    <View style={styles.inputGroup}>
-                        <TouchableOpacity
-                            style={styles.imagePicker}
-                            onPress={() => handleImagePicker(setFitnessImage)}
-                        >
-                            <Text style={styles.imagePickerText}>Upload Fitness</Text>
-                        </TouchableOpacity>
-                        {fitnessImage && <Image source={{ uri: fitnessImage.uri }} style={styles.previewImage} />}
-                    </View>
-
-                    <View style={styles.inputGroup}>
-                        <TouchableOpacity
-                            style={styles.imagePicker}
-                            onPress={() => handleImagePicker(setTaxImage)}
-                        >
-                            <Text style={styles.imagePickerText}>Upload Tax</Text>
-                        </TouchableOpacity>
-                        {taxImage && <Image source={{ uri: taxImage.uri }} style={styles.previewImage} />}
                     </View>
 
                     <View style={styles.inputGroup}>

@@ -30,7 +30,7 @@ const EditCarScreen: React.FC = () => {
     const [chassisBrand, setChassisBrand] = useState("");
     const [selectedAC, setSelectedAC] = useState<string | null>(null); // State for AC/Non-AC selection
     const [selectedForRent, setSelectedForRent] = useState<boolean>(false); // State for For Rent selection
-    const [selectedForSell, setSelectedForSell] = useState<boolean>(false); // State for For Sell selection
+    const [selectedForSell, setSelectedForSell] = useState<boolean>(true); // State for For Sell selection
     const [carImages, setCarImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
     const [loading, setLoading] = useState(false);
     const { apiCaller, editData, setRefresh } = useGlobalContext();
@@ -216,15 +216,15 @@ const EditCarScreen: React.FC = () => {
 
                     {/* For Rent/For Sell Checkboxes */}
                     <View style={styles.featuresContainer}>
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             style={[styles.checkboxContainer, { backgroundColor: selectedForRent ? Colors.darkBlue : Colors.secondary }]}
                             onPress={() => setSelectedForRent(!selectedForRent)}
                         >
                             <Text style={styles.checkboxText}>For Rent</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         <TouchableOpacity
                             style={[styles.checkboxContainer, { backgroundColor: selectedForSell ? Colors.darkBlue : Colors.secondary }]}
-                            onPress={() => setSelectedForSell(!selectedForSell)}
+                            onPress={() => setSelectedForSell(true)}
                         >
                             <Text style={styles.checkboxText}>For Sell</Text>
                         </TouchableOpacity>

@@ -104,7 +104,7 @@ function BusTicketCard({ route }: { route: DailyRoute }) {
     const [isDriverModalVisible, setIsDriverModalVisible] = useState<string | null>(null);
     const [isChartModalVisible, setIsChartModalVisible] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false)
-    const { apiCaller } = useGlobalContext()
+    const { apiCaller, isLogged } = useGlobalContext()
 
     const handleAddToFavourite = async (id: string) => {
         setIsLoading(true)
@@ -136,8 +136,8 @@ function BusTicketCard({ route }: { route: DailyRoute }) {
                         height={deviceWidth * 0.6}
                     />
                     <View style={styles.circle}>
-                        <Text style={styles.circleText}>{route?.vehicle.isAC ? "AC" : "Non-AC"}</Text>
-                        <Text style={styles.circleText}>{route?.vehicle.isSleeper ? "Sleeper" : "Seater"}</Text>
+                        <Text style={styles.circleText}>{route?.vehicle?.isAC ? "AC" : "Non-AC"}</Text>
+                        <Text style={styles.circleText}>{route?.vehicle?.isSleeper ? "Sleeper" : "Seater"}</Text>
                         <Text style={styles.circleText}>{route?.vehicle?.number.toUpperCase()}</Text>
                     </View>
                 </View>
@@ -320,7 +320,7 @@ function BusTicketCard({ route }: { route: DailyRoute }) {
                             />
                         </View>
                     </View>
-                    <View style={styles.modalButtons}>
+                    {isLogged && <View style={styles.modalButtons}>
                         <TouchableOpacity
                             style={[styles.modalButton, { backgroundColor: Colors.darkBlue }]}
                             onPress={() => handleAddToFavourite(route._id)}
@@ -331,7 +331,7 @@ function BusTicketCard({ route }: { route: DailyRoute }) {
                                 <Text style={[styles.modalButtonText, { color: "#fff" }]}>Add To Favourite</Text>
                             )}
                         </TouchableOpacity>
-                    </View>
+                    </View>}
                 </View>
             </View>
 

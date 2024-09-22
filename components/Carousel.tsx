@@ -40,7 +40,7 @@ const Carousel = ({ images, height }) => {
         decelerationRate="fast"
       />
       <View style={styles.dotContainer}>
-        {images.map((_, index) => (
+        {images?.map((_, index) => (
           <View
             key={index}
             style={[

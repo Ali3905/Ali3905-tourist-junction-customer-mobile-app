@@ -7,6 +7,7 @@ import Carousel from '@/components/Carousel'
 import { Colors } from '@/constants/Colors'
 import { City } from 'country-state-city'
 import { Picker } from '@react-native-picker/picker'
+import GoToLogin from '@/components/GoToLogin'
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
@@ -15,7 +16,7 @@ export default function FavouriteHolidayYatraScreen() {
     const [tours, setTours] = useState<Tour[]>([])
 
     const [isLoading, setIsLoading] = useState<boolean>(true)
-    const { apiCaller, refresh } = useGlobalContext()
+    const { apiCaller, refresh, isLogged } = useGlobalContext()
 
     const [selectedLocation, setSelectedLocation] = useState<string>("")
 
@@ -48,10 +49,14 @@ export default function FavouriteHolidayYatraScreen() {
     useEffect(() => {
         fetchTours()
     }, [refresh])
-
+    
+    if (!isLogged) {
+        return <GoToLogin />
+    }
     if (!isLoading && (!filteredTours || filteredTours.length < 1)) {
         return <Text style={{ textAlign: "center", marginTop: 10 }}>No Favourite Tours to show</Text>
     }
+
 
     return (
         <View style={styles.container}>

@@ -41,7 +41,10 @@ const DriversScreen = () => {
         try {
             setIsLoading(true)
             const res = await apiCaller.get(`/api/driver/all`)
-            setDrivers(res.data.data)
+            const filteredData = res.data.data.filter((dri: Driver) => {
+                return dri.vehicleType === "CAR" || dri.vehicleType === "ALL"
+            })
+            setDrivers(filteredData)
         } catch (error: any) {
             console.log(error.response.data.message);
             console.log(error);
@@ -125,11 +128,11 @@ const DriversScreen = () => {
             {isLoading ? (
                 <ActivityIndicator size="large" color={Colors.darkBlue} />
             ) : (
-                <View style={styles.driversList}>
+                <ScrollView style={styles.driversList}>
                     {filteredDrivers.map((driver) => {
                         return <DriverCard driver={driver} handleViewImage={handleViewImage} handlePress={handlePress} />
                     })}
-                </View>
+                </ScrollView>
             )}
             <ImageModal selectedImage={selectedImage ? selectedImage : ""} isImageModalVisible={isImageModalVisible} handleCloseModal={handleCloseModal} />
         </SafeAreaView>

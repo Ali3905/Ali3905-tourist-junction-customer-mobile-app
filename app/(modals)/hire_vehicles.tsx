@@ -19,8 +19,11 @@ import { useGlobalContext } from "@/context/GlobalProvider";
 // import { BlurView } from 'expo-blur';
 import { Picker } from "@react-native-picker/picker";
 import { City, State } from "country-state-city";
+import Carousel from "@/components/Carousel";
 
 const { width: viewportWidth } = Dimensions.get("window");
+const deviceWidth = Dimensions.get('window').width;
+const deviceHeight = Dimensions.get('window').height;
 
 interface Vehicle {
     _id: string;
@@ -212,6 +215,10 @@ const RentVehicleScreen: React.FC = () => {
 const RentVehicleCard = ({ vehicle }: { vehicle: Vehicle }) => {
     return (
         <View key={vehicle.number} style={styles.card}>
+            <Carousel 
+            images={vehicle?.photos}
+            height={deviceWidth * 0.6}
+            />
             <Text style={styles.cardText}>Vehicle No: <Text style={{ color: "black" }}>{vehicle.number.toUpperCase()}</Text></Text>
             <Text style={styles.cardText}>Model: <Text style={{ color: "black" }}>{vehicle.model}</Text></Text>
             <Text style={styles.cardText}>Contact No: <Text style={{ color: "black" }}>{vehicle.contactNumber}</Text></Text>

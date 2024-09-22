@@ -36,6 +36,11 @@ interface Vehicle {
     isForRent: boolean;
     isForSell: boolean;
     type: string;
+    curtain?: boolean;
+    isLuggageSpace?: boolean;
+    isSeatPushBack?: boolean;
+    amenities?: string[];
+    sellDescription?: string;
 }
 
 interface BlurOverlayProps {
@@ -163,7 +168,7 @@ const SellVehicleScreen: React.FC = () => {
                             images={vehicle?.photos}
                             height={deviceWidth * 0.6}
                             />
-                            <View style={styles.paginationContainer}>
+                            {/* <View style={styles.paginationContainer}>
                                 {vehicle.photos.map((_, photoIndex) => (
                                     <View
                                         key={photoIndex}
@@ -173,7 +178,7 @@ const SellVehicleScreen: React.FC = () => {
                                         ]}
                                     />
                                 ))}
-                            </View>
+                            </View> */}
                             <Text style={styles.cardText}>Vehicle No: <Text style={{ color: "black" }}>{vehicle.number.toUpperCase()}</Text></Text>
                             <Text style={styles.cardText}>Model: <Text style={{ color: "black" }}>{vehicle.model}</Text></Text>
                             <Text style={styles.cardText}>Contact No: <Text style={{ color: "black" }}>{vehicle.contactNumber}</Text></Text>
@@ -225,7 +230,7 @@ const SellVehicleScreen: React.FC = () => {
 
                                 </View>
                                 <Text style={{ flex: 1, fontWeight: 'bold', color: '#87CEEB' }}>Amenities:</Text>
-                                {vehicle.amenities.length < 1 ? <Text>No Description Amenities</Text> :
+                                {vehicle.amenities && vehicle.amenities.length < 1 ? <Text>No Description Amenities</Text> :
                                     <View style={{
                                         paddingTop: 1,
                                         paddingBottom: 14,

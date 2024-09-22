@@ -8,6 +8,7 @@ import CustomButton from "@/components/CustomButton"
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons'
 import { City } from 'country-state-city'
 import { Picker } from '@react-native-picker/picker'
+import GoToLogin from '@/components/GoToLogin'
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
@@ -104,7 +105,7 @@ function BusTicketCard({ route }: { route: DailyRoute }) {
     const [isDriverModalVisible, setIsDriverModalVisible] = useState<string | null>(null);
     const [isChartModalVisible, setIsChartModalVisible] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false)
-    const { apiCaller, setRefresh } = useGlobalContext()
+    const { apiCaller, setRefresh, isLogged } = useGlobalContext()
 
     const handleAddToFavourite = async (id: string) => {
         setIsLoading(true)
@@ -118,6 +119,9 @@ function BusTicketCard({ route }: { route: DailyRoute }) {
         } finally {
             setIsLoading(false)
         }
+    }
+    if (!isLogged) {
+        return <GoToLogin />
     }
 
     return (

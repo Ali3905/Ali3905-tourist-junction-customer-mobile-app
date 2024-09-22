@@ -11,7 +11,8 @@ import {
     SafeAreaView,
     ScrollView,
     ActivityIndicator,
-    Dimensions
+    Dimensions,
+    Alert
 } from "react-native";
 import { BlurView } from 'expo-blur';
 import { Colors } from "@/constants/Colors";
@@ -99,13 +100,16 @@ const VehicleListScreen: React.FC = () => {
 
     const handleDelete = async () => {
         if (selectedVehicleId) {
-            await apiCaller.delete(`/api/vehicle?vehicleId=${selectedVehicleId}`);
+            await apiCaller.delete(`/api/vehicle/deleteDocuments?vehicleId=${selectedVehicleId}`);
             setShowDeleteModal(false);
             fetchVehicles();
         }
     };
 
     const handleViewImage = (imageUri: string) => {
+        if (!imageUri) {
+            return Alert.alert("Failed", "This image is not available")
+        }
         setSelectedImage(imageUri);
         setShowImageModal(true);
     };
@@ -154,7 +158,7 @@ const VehicleListScreen: React.FC = () => {
                                 <TouchableOpacity style={styles.viewDocumentButton} onPress={() => handleViewImage(vehicle.insurance)}>
                                     <Text style={styles.viewDocumentButtonText}>View Insurance</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.viewDocumentButton} onPress={() => handleViewImage(vehicle.permit)}>
+                                {/* <TouchableOpacity style={styles.viewDocumentButton} onPress={() => handleViewImage(vehicle.permit)}>
                                     <Text style={styles.viewDocumentButtonText}>View Permit</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.viewDocumentButton} onPress={() => handleViewImage(vehicle.fitness)}>
@@ -162,7 +166,7 @@ const VehicleListScreen: React.FC = () => {
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.viewDocumentButton} onPress={() => handleViewImage(vehicle.tax)}>
                                     <Text style={styles.viewDocumentButtonText}>View Tax</Text>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                                 <TouchableOpacity style={styles.viewDocumentButton} onPress={() => handleViewImage(vehicle.PUC)}>
                                     <Text style={styles.viewDocumentButtonText}>View PUC</Text>
                                 </TouchableOpacity>
