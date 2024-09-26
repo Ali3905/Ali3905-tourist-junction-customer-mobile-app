@@ -131,6 +131,8 @@ const RentVehicleScreen: React.FC = () => {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView>
+                
+            <View style={styles.curveSection}>
                 <View style={styles.searchContainer}>
                     <View style={styles.vehiclePicker}>
                         <Picker
@@ -146,8 +148,6 @@ const RentVehicleScreen: React.FC = () => {
                             }
                         </Picker>
                     </View>
-                    {/* </View>
-            <View style={styles.searchContainer}> */}
                     <View style={styles.vehiclePicker}>
                         <Picker
                             selectedValue={selectedCity}
@@ -177,6 +177,7 @@ const RentVehicleScreen: React.FC = () => {
                         <Picker.Item label="TRUCK" value="TRUCK" />
                         <Picker.Item label="TAMPO" value="TAMPO" />
                     </Picker>
+                </View>
                 </View>
 
                 {loading ? (
@@ -253,13 +254,13 @@ const RentVehicleCard = ({ vehicle }: { vehicle: Vehicle }) => {
                     </View>
 
                 </View>
-                <Text style={{ flex: 1, fontWeight: 'bold', color: '#87CEEB' }}>Amenities:</Text>
-                {vehicle.amenities !== undefined && vehicle.amenities.length < 1 ? <Text>No Description Amenities</Text> :
+                <Text style={{ flex: 1, fontWeight: 'bold', color: '#87CEEB' , paddingLeft:10 }}>Amenities:</Text>
+                {vehicle.amenities !== undefined && vehicle.amenities.length < 1 ? "" :
                     <View style={{
                         paddingTop: 1,
                         paddingBottom: 14,
                         flexDirection: 'row',
-
+                    
                     }}>
 
                         {vehicle?.amenities?.includes("wifi") && <Image
@@ -299,48 +300,63 @@ const RentVehicleCard = ({ vehicle }: { vehicle: Vehicle }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
+        padding: 5,
         backgroundColor: "#EAEAEA",
+    },
+    curveSection: {
+        backgroundColor:'#3086FF',
+        padding: 10,
+        margin:5,
+        borderBottomLeftRadius: 20,  // Bottom-left corner radius
+        borderBottomRightRadius: 20,
     },
     searchContainer: {
         flexDirection: "row",
         alignItems: "center",
         // paddingHorizontal: 15,
-        marginBottom: 20,
-        paddingVertical: 0,
-        gap: 2
+        marginBottom: 2,
+        paddingVertical:1,
+        gap: 2,
+        borderRadius:10
+       
     },
     searchInput: {
         flex: 1,
         marginLeft: 10,
         color: Colors.secondary,
+
     },
     vehicleFilterContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        // justifyContent: 'space-between',
         borderWidth: 1,
         borderColor: Colors.secondary,
+       
+       
     },
     vehiclePicker: {
         flex: 1,
-        marginHorizontal: 2,
+        marginHorizontal: 1,
         borderColor: Colors.secondary,
         borderWidth: 1,
         borderRadius: 5,
+        backgroundColor:'#fff',
+         
     },
     card: {
         backgroundColor: "#fff",
-        padding: 20,
+        padding: 1,
         borderRadius: 5,
         elevation: 3,
         shadowColor: "#000",
         shadowOffset: { width: 2, height: 2 },
         shadowOpacity: 0.2,
         shadowRadius: 5,
-        marginBottom: 20,
+        margin: 10,
     },
     cardText: {
-        marginBottom: 10,
+        marginBottom: 1,
+        marginLeft:10,
         color: Colors.secondary,
         fontWeight: "500",
         fontSize: 15,

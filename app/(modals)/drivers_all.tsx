@@ -94,37 +94,41 @@ const DriversScreen = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.searchContainer}>
-                <Picker
-                    selectedValue={selectedState}
-                    style={styles.vehiclePicker}
-                    onValueChange={item => setSelectedState(item)}
-                >
-                    <Picker.Item label="Punjab" value={"PB"} />
-                    {
-                        states.map((state) => {
+           
+           <View style={styles.curveSection}>
+                <View style={styles.searchContainer}>
+                        <Picker
+                            selectedValue={selectedState}
+                            style={styles.vehiclePicker}
+                            onValueChange={item => setSelectedState(item)}
+                        >
+                            <Picker.Item label="select state" value={"PB"} style={styles.picker}/>
+                            {
+                                states.map((state) => {
+                                    return <Picker.Item label={state.name} value={state.isoCode} style={styles.picker} />
+                                })
+                            }
+                        </Picker>
+                    </View>
 
-                            return <Picker.Item label={state.name} value={state.isoCode} />
-                        })
-                    }
-                </Picker>
-            </View>
-            <View style={styles.searchContainer}>
-                <Picker
-                    selectedValue={selectedCity}
-                    style={styles.vehiclePicker}
-                    onValueChange={item => {
-                        setSelectedCity(item); console.log("cur", item);
-                    }}
-                >
-                    <Picker.Item label="Select City" value={""} />
-                    {cities &&
-                        cities.map((city) => {
-                            return <Picker.Item label={city.name} value={city.name} />
-                        })
-                    }
-                </Picker>
-            </View>
+                    <View style={styles.searchContainer}>
+                        <Picker
+                            selectedValue={selectedCity}
+                            style={styles.vehiclePicker}
+                            onValueChange={item => {
+                                setSelectedCity(item); console.log("cur", item);
+                            }}
+                        >
+                            <Picker.Item label="Select City" value={""} style={styles.picker} />
+                            {cities &&
+                                cities.map((city) => {
+                                    return <Picker.Item label={city.name} value={city.name}  />
+                                })
+                            }
+                        </Picker>
+                    </View>
+           </View>
+
             {isLoading ? (
                 <ActivityIndicator size="large" color={Colors.darkBlue} />
             ) : (
@@ -151,34 +155,36 @@ const DriverCard = ({ driver, handlePress, handleViewImage }: DriverCardProps) =
                 </TouchableOpacity>
             </View>
             <Text style={styles.cardText}>
-                Name: <Text style={{ color: "black" }}>{driver.name}</Text>
+                Name - <Text style={{ color: "black" }}>{driver.name}</Text>
             </Text>
             <View style={[{ marginBottom: 2, marginTop: 5, flexDirection: "row" }]}>
-                <Text style={{ color: Colors.darkBlue }}>Mobile: </Text>
+                <Text style={styles.cardText}>Mobile - </Text>
                 <TouchableOpacity onPress={() => handlePress(driver.mobileNumber)}>
                     <MaterialIcons name="phone-in-talk" size={24} color={Colors.darkBlue} />
                 </TouchableOpacity>
             </View>
             <Text style={styles.cardText}>
-                City: <Text style={{ color: "black" }}>{driver.city}</Text>
+                City - <Text style={{ color: "black" }}>{driver.city}</Text>
             </Text>
             <Text style={styles.cardText}>
-                State: <Text style={{ color: "black" }}>{driver.state}</Text>
+                State - <Text style={{ color: "black" }}>{driver.state}</Text>
             </Text>
             <Text style={styles.cardText}>
-                Vehicle Type: <Text style={{ color: "black" }}>{driver.vehicleType}</Text>
+                Vehicle Type - <Text style={{ color: "black" }}>{driver.vehicleType}</Text>
             </Text>
             <View style={styles.aadharContainer}>
-                <Text style={styles.cardText}>Aadhar card</Text>
+                {/* <Text style={styles.cardText}>Aadhar card</Text> */}
                 <TouchableOpacity style={styles.viewAadharButton} onPress={() => handleViewImage(driver.aadharCard)}>
                     <Text style={styles.viewAadharButtonText}>View Aadhar</Text>
                 </TouchableOpacity>
-            </View>
-            <View style={styles.aadharContainer}>
-                <Text style={styles.cardText}>Driver License</Text>
+
                 <TouchableOpacity style={styles.viewAadharButton} onPress={() => handleViewImage(driver.license)}>
                     <Text style={styles.viewAadharButtonText}>View License</Text>
                 </TouchableOpacity>
+            </View>
+            <View style={styles.aadharContainer}>
+                {/* <Text style={styles.cardText}>Driver License</Text> */}
+                
             </View>
         </View>
     )
@@ -212,8 +218,12 @@ const ImageModal = ({ selectedImage, isImageModalVisible, handleCloseModal }: Im
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
+        // padding: 1,
         backgroundColor: "#EAEAEA",
+    },
+    picker: {
+    fontSize:12,
+       color:'gray'
     },
     searchContainer: {
         flexDirection: "row",
@@ -221,36 +231,46 @@ const styles = StyleSheet.create({
         borderColor: Colors.secondary,
         borderWidth: 1,
         borderRadius: 5,
-        paddingHorizontal: 15,
-        marginBottom: 20,
+        paddingHorizontal: 1,
+        marginBottom: 10,
+        backgroundColor:'#fff'
     },
     searchInput: {
         flex: 1,
         marginLeft: 10,
         color: Colors.secondary,
     },
+    curveSection: {
+        backgroundColor:'#3086FF',
+        padding: 10,
+        margin:10,
+        borderBottomLeftRadius: 20,  // Bottom-left corner radius
+        borderBottomRightRadius: 20,
+    },
     vehicleFilterContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         borderWidth: 1,
-        borderColor: '#000000',
-        fontSize: 1,
-        height: 50,
-        marginBottom: 10
+        borderRadius: 10,
+        backgroundColor: '#ffffff',
+        marginBottom: 1,
+        borderColor: 'rgba(245, 245, 35, 0.8)',
+        height: 10, 
+        alignItems:'center' 
     },
     vehiclePicker: {
         flex: 1,
         marginHorizontal: 1,
 
     },
-    addButton: {
-        backgroundColor: Colors.darkBlue,
-        paddingVertical: 10,
-        borderRadius: 5,
-        alignItems: "center",
-        marginBottom: 20,
-        width: 140,
-    },
+    // addButton: {
+    //     backgroundColor: Colors.darkBlue,
+    //     paddingVertical: 10,
+    //     borderRadius: 5,
+    //     alignItems: "center",
+    //     marginBottom: 20,
+    //     width: 140,
+    // },
     addButtonText: {
         color: "#fff",
         fontWeight: "bold",
@@ -260,20 +280,24 @@ const styles = StyleSheet.create({
     },
     card: {
         backgroundColor: "#fff",
-        padding: 20,
+        padding: 10,
         borderRadius: 5,
-        marginBottom: 20,
+        margin: 4,
+        marginHorizontal:20,
         elevation: 3,
         shadowColor: "#000",
         shadowOffset: { width: 2, height: 2 },
         shadowOpacity: 0.2,
         shadowRadius: 5,
-        position: "relative",
+        borderColor:Colors.secondary,
+        borderWidth:1
+
+        // position: "relative",
     },
     imageContainer: {
         position: "absolute",
         right: 30,
-        top: 70,
+        top: 20,
     },
     driverImage: {
         width: 70,
@@ -298,18 +322,21 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     cardText: {
-        marginBottom: 10,
-        color: Colors.secondary,
-        fontWeight: "500",
-        fontSize: 15,
+        marginBottom: 2,
+        color: 'gray-400',
+        fontWeight: "700",
+        fontSize: 12,
     },
     aadharContainer: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between",
+        // justifyContent: "space-between",
+        gap:4,
+        paddingTop:4
+
     },
     viewAadharButton: {
-        backgroundColor: Colors.darkBlue,
+        backgroundColor:'#3086FF',
         paddingHorizontal: 10,
         borderRadius: 5,
         paddingVertical: 5,

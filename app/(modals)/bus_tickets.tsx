@@ -51,40 +51,44 @@ export default function BusTicketsScreen() {
 
     return (
         <SafeAreaView style={styles.container}>
+            <View style={styles.curveSection}>
+            <TouchableOpacity onPress={() => router.push("/favourite_bus_tickets")} style={styles.addButton}>
+                <Text style={styles.addButtonText}>Favourite Routes</Text>
+            </TouchableOpacity>
+
             <View style={styles.vehicleFilterContainer}>
                 <Picker
                     selectedValue={selectedDepPlace}
                     style={styles.vehiclePicker}
                     onValueChange={item => setSelectedDepPlace(item)}
                 >
-                    <Picker.Item label="All Cities" value="" />
+                    <Picker.Item label="From" value="" style={styles.picker}/>
                     {
                         cities?.map((city) => (
-                            <Picker.Item label={city.name} value={city.name} />
+                            <Picker.Item label={city.name} value={city.name}  />
                         ))
                     }
                 </Picker>
             </View>
+
             <View style={styles.vehicleFilterContainer}>
                 <Picker
                     selectedValue={selectedDestPlace}
                     style={styles.vehiclePicker}
                     onValueChange={item => setSelectedDestPlace(item)}
                 >
-                    <Picker.Item label="All Cities" value="" />
+                    <Picker.Item label="To" value="" style={styles.picker} />
                     {
                         cities?.map((city) => (
-                            <Picker.Item label={city.name} value={city.name} />
+                            <Picker.Item label={city.name} value={city.name} style={styles.picker} />
                         ))
                     }
                 </Picker>
             </View>
+            </View>
+            
 
-            <TouchableOpacity onPress={() => router.push("/favourite_bus_tickets")} style={styles.addButton}>
-                <Text style={styles.addButtonText}>Favourite Routes</Text>
-            </TouchableOpacity>
-
-
+            
 
             {isLoading ? (
                 <ActivityIndicator size="large" color={Colors.darkBlue} />
@@ -125,13 +129,6 @@ function BusTicketCard({ route }: { route: DailyRoute }) {
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <View style={{ position: 'relative' }}>
                     <Carousel
-                        // width={deviceWidth * 0.9}
-                        // height={deviceWidth * 0.6}
-                        // autoPlay
-                        // data={route?.vehicle?.photos}
-                        // renderItem={({ item }) => (
-                        //     <Image source={{ uri: item }} style={styles.carouselImage} />
-                        // )}
                         images={route?.vehicle?.photos}
                         height={deviceWidth * 0.6}
                     />
@@ -142,19 +139,20 @@ function BusTicketCard({ route }: { route: DailyRoute }) {
                     </View>
                 </View>
             </View>
-            <View >
-                <Text
-                    style={{
-                        fontSize: 20,
-                        fontWeight: '900',
-                        color: '#87CEEB',
-                        fontFamily: 'sans-serif',
-                        textAlign: 'center'
-                    }}
-                >
-                    {route?.agencyName}
-                </Text>
-            </View>
+            <View>
+             <Text
+                style={{
+                    fontSize: 20,
+                    fontWeight: '900',
+                    color: '#26355E',
+                    fontFamily: 'sans-serif',
+                    textTransform: 'uppercase', // This will transform the text to uppercase
+                    paddingHorizontal:10
+                }}
+             >
+                {route?.agencyName}
+            </Text>
+         </View>
 
 
             <View style={{ width: "100%", paddingHorizontal: 40 }}>
@@ -162,19 +160,19 @@ function BusTicketCard({ route }: { route: DailyRoute }) {
                 <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                     {/* Departure Label */}
                     <View style={{ alignItems: "flex-start" }}>
-                        <Text style={{ fontWeight: "bold", fontSize: 15 }}>Departure</Text>
+                        <Text style={{ fontWeight: "900", fontSize: 15, color:'#3086FF' }}>Departure</Text>
                     </View>
 
                     {/* Arrival Label */}
-                    <View style={{ alignItems: "flex-start" }}>
-                        <Text style={{ fontWeight: "bold", fontSize: 15, paddingRight: 13 }}>Arrival</Text>
+                    <View style={{ alignItems: "start" }}>
+                        <Text style={{ fontWeight: "900", fontSize: 15, paddingRight: 8, color:'#3086FF' }}>Arrival</Text>
                     </View>
                 </View>
 
                 {/* Departure and Arrival Places with Times */}
                 <View style={{ flexDirection: "row", justifyContent: "space-between", marginVertical: 1 }}>
                     {/* Departure Place and Time */}
-                    <View style={{ alignItems: "center" }}>
+                    <View style={{ alignItems: "start" }}>
                         <Text style={{ fontWeight: "bold", fontSize: 18, color: "#87CEEB" }}>
                             {route?.departurePlace}
                         </Text>
@@ -185,7 +183,7 @@ function BusTicketCard({ route }: { route: DailyRoute }) {
                     <MaterialIcons name="keyboard-double-arrow-right" size={24} color="#00008B" />
 
                     {/* Arrival Place and Time */}
-                    <View style={{ alignItems: "center" }}>
+                    <View style={{ alignItems: "start" }}>
                         <Text style={{ fontWeight: "bold", fontSize: 18, color: "#87CEEB" }}>
                             {route?.destinationPlace}
                         </Text>
@@ -193,32 +191,29 @@ function BusTicketCard({ route }: { route: DailyRoute }) {
                     </View>
                 </View>
             </View>
-            {/* 
-        <Text style={styles.cardText}>
-          Vehicle Number: <Text style={{ color: "black" }}>{route.vehicle.number.toUpperCase()}</Text>
-        </Text> */}
+          
 
 
             <Text style={styles.cardText}>
-                Pick Up Point: {route?.pickupPoint}
+                Pick Up Point - {route?.pickupPoint}
             </Text>
             <Text style={styles.cardText}>
-                Dropping Point: {route?.dropoffPoint}
+                Dropping Point - {route?.dropoffPoint}
             </Text>
             <Text style={styles.cardText}>
-                Ticket Price: {route?.ticketFare}
+                Ticket Price - {route?.ticketFare}
             </Text>
 
             <View>
-                <Text style={{ flex: 1, fontWeight: 'bold', fontSize: 12, }}>Office Address: {route?.officeAddress} </Text>
+                <Text style={{ flex: 1, fontWeight: 'bold', paddingHorizontal:10, fontSize: 12, }}>Office Address - {route?.officeAddress} </Text>
             </View>
             <View>
-                <Text style={{ flex: 1, fontWeight: 'bold', fontSize: 12, marginBottom: 4 }}>Phone Pe No: {route?.phonepeNumber} </Text>
+                <Text style={{ flex: 1, fontWeight: 'bold', fontSize: 12, paddingHorizontal:10, marginBottom: 4 }}>Phone Pe No - {route?.phonepeNumber} </Text>
             </View>
             <View>
-                <Text style={{ flex: 1, fontWeight: 'bold', fontSize: 12, marginBottom: 4 }}>Discount: {route?.discount}% </Text>
+                <Text style={{ flex: 1, fontWeight: 'bold', fontSize: 12, paddingHorizontal:10, marginBottom: 4 }}>Discount - {route?.discount}% </Text>
             </View>
-            <Text style={{ flex: 1, fontWeight: 'bold', color: '#87CEEB' }}>Amenities:</Text>
+            <Text style={{ flex: 1, fontWeight: 'bold', paddingHorizontal:10, color: '#87CEEB' }}>Amenities:</Text>
             <View style={{
                 paddingTop: 1,
                 paddingBottom: 14,
@@ -259,18 +254,7 @@ function BusTicketCard({ route }: { route: DailyRoute }) {
             <View style={{ padding: 1 }}>
                 {/* <PhoneNumbersList phoneNumbers={route?.mobileNumbers} /> */}
             </View>
-            {/* <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: 1,
-              }}
-            >
-              <Text style={{ flex: 1, fontWeight: 'bold', color: '#87CEEB' }}>Courier Services</Text>
-              <Text style={{ flex: 1, fontWeight: 'bold', color: '#87CEEB' }}>Train Ticket</Text>
-              <Text style={{ flex: 1, fontWeight: 'bold', color: '#87CEEB' }}>Two Wheeler Courier</Text>
-            </View> */}
+            
             <View
                 style={{
                     flex: 1,
@@ -322,7 +306,7 @@ function BusTicketCard({ route }: { route: DailyRoute }) {
                     </View>
                     {isLogged && <View style={styles.modalButtons}>
                         <TouchableOpacity
-                            style={[styles.modalButton, { backgroundColor: Colors.darkBlue }]}
+                            style={[styles.modalButton, { backgroundColor: '#3086FF' }]}
                             onPress={() => handleAddToFavourite(route._id)}
                         >
                             {isLoading ? (
@@ -346,6 +330,18 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 15,
         backgroundColor: "#EAEAEA",
+    },
+    curveSection: {
+        backgroundColor:'#3086FF',
+        padding: 10,
+        // margin:8,
+        marginBottom:10,
+        borderBottomLeftRadius: 20,  // Bottom-left corner radius
+        borderBottomRightRadius: 20,
+    },
+    picker: {
+       fontSize:12,
+       color:'gray'
     },
     circle: {
         position: 'absolute',
@@ -386,14 +382,21 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         borderWidth: 1,
-        borderColor: Colors.secondary,
+        borderRadius: 10,
+        backgroundColor: '#ffffff',
+        marginBottom: 1,
+        borderColor: 'rgba(245, 245, 35, 0.8)',
+        height: 35, 
+        alignItems:'center',
+        // paddingVertical: 5,
+        margin:2
     },
     vehiclePicker: {
         flex: 1,
         marginHorizontal: 2,
         borderColor: Colors.secondary,
         borderWidth: 1,
-        borderRadius: 5,
+        height: 35,
     },
     facilityBtn: {
         fontWeight: 'bold',
@@ -420,16 +423,17 @@ const styles = StyleSheet.create({
         color: Colors.secondary,
     },
     addButton: {
-        backgroundColor: Colors.darkBlue,
         borderRadius: 8,
         padding: 8,
+        paddingHorizontal: 4,
         alignItems: "center",
         marginBottom: 10,
-        width: 120
+        width: 100,
+        backgroundColor: 'rgba(245, 245, 35, 0.8)',
     },
     addButtonText: {
-        color: "#fff",
-        fontSize: 16,
+        color: "#000",
+        fontSize: 12,
         fontWeight: "bold",
     },
     routesList: {
@@ -437,10 +441,12 @@ const styles = StyleSheet.create({
     },
     card: {
         backgroundColor: "#fff",
-        padding: 4,
+        padding:1,
         borderRadius: 5,
-        marginBottom: 10,
-        paddingHorizontal: 8,
+        borderColor:Colors.secondary,
+        borderWidth:1,
+        margin: 5,
+        paddingHorizontal: 1,
         elevation: 3,
         shadowColor: "#000",
         shadowOffset: { width: 2, height: 2 },
@@ -468,6 +474,7 @@ const styles = StyleSheet.create({
         color: '#000000',
         fontWeight: "600",
         fontSize: 12,
+        paddingHorizontal:10
     },
     modalContainer: {
         flex: 1,
@@ -522,13 +529,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 5,
     },
-    picker: {
-        width: "100%",
-        height: 50,
-        borderWidth: 1,
-        borderColor: Colors.secondary,
-        borderRadius: 5,
-    },
+    // picker: {
+    //     width: "100%",
+    //     height: 50,
+    //     borderWidth: 1,
+    //     borderColor: Colors.secondary,
+    //     borderRadius: 5,
+    // },
     input: {
         borderColor: Colors.secondary,
         borderWidth: 1,
