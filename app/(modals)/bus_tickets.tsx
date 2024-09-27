@@ -1,4 +1,4 @@
-import { ActivityIndicator, Dimensions, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View, TouchableOpacity, Alert } from 'react-native'
+import { ActivityIndicator, Dimensions, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, Modal } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useGlobalContext } from '@/context/GlobalProvider'
 import { Colors } from '@/constants/Colors'
@@ -8,6 +8,7 @@ import CustomButton from "@/components/CustomButton"
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons'
 import { City } from 'country-state-city'
 import { Picker } from '@react-native-picker/picker'
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { router } from 'expo-router'
 
 const deviceWidth = Dimensions.get('window').width;
@@ -101,10 +102,16 @@ export default function BusTicketsScreen() {
 
 function BusTicketCard({ route }: { route: DailyRoute }) {
     const [isQRModalVisible, setIsQrModalVisible] = useState<string | null>(null);
-    const [isDriverModalVisible, setIsDriverModalVisible] = useState<string | null>(null);
     const [isChartModalVisible, setIsChartModalVisible] = useState<string | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+    const [ticketRequest, setTicketRequest] = useState({
+        dateOfJourney: "",
+        numberOfPeople: 0,
+        passengerGender: ""
+    })
+    const [showDepartureDatePicker, setShowDepartureDatePicker] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState(false)
-    const { apiCaller, isLogged } = useGlobalContext()
+    const { apiCaller, isLogged, userData } = useGlobalContext()
 
     const handleAddToFavourite = async (id: string) => {
         setIsLoading(true)
@@ -119,6 +126,38 @@ function BusTicketCard({ route }: { route: DailyRoute }) {
         }
     }
 
+    const handleSendRequest = async () => {
+        if (!ticketRequest.dateOfJourney || !ticketRequest.numberOfPeople || !ticketRequest.passengerGender) {
+            return Alert.alert("Failed", "Fill all the required fields")
+        }
+        setIsLoading(true)
+        try {
+            const res = await apiCaller.post(`/api/ticketRequest?routeId=${route._id}`, ticketRequest)
+            Alert.alert("Success", "Interest has been sent. Agency will connect with you")
+            setIsModalOpen(false)
+        } catch (error: any) {
+            console.log(error?.response?.data?.message || error);
+            Alert.alert("Error", error?.response?.data?.message || "Could not send interest")
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false)
+    }
+
+    const onChangeDateOfJourney = (event: any, selectedTime?: Date) => {
+        setShowDepartureDatePicker(false);
+        if (selectedTime) {
+            setTicketRequest({ ...ticketRequest, dateOfJourney: selectedTime });
+        }
+    };
+
+    const formatDate = (date: Date | undefined) => {
+        if (!date) return "";
+        return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear().toString().slice(-2)}`;
+    };
     return (
         <View key={route._id} style={styles.card}>
 
@@ -301,10 +340,10 @@ function BusTicketCard({ route }: { route: DailyRoute }) {
                             </Text> : <Text style={[styles.facilityBtn, { backgroundColor: "transparent" }]}>
 
                             </Text>}
-                            <CustomButton
+                            {/* <CustomButton
                                 title="View Driver"
                                 onPress={() => setIsDriverModalVisible(route._id)}
-                            />
+                            /> */}
                         </View>
 
                         {/* Column for Two Wheeler Courier and Chart Button */}
@@ -332,8 +371,227 @@ function BusTicketCard({ route }: { route: DailyRoute }) {
                             )}
                         </TouchableOpacity>
                     </View>}
+                    {isLogged && <View style={styles.modalButtons}>
+                        <TouchableOpacity
+                            style={[styles.modalButton, { backgroundColor: Colors.darkBlue, marginTop: 5 }]}
+                            onPress={() => setIsModalOpen(true)}
+                        >
+                            {isLoading ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={[styles.modalButtonText, { color: "#fff" }]}>Send Interest</Text>
+                            )}
+                        </TouchableOpacity>
+                    </View>}
                 </View>
             </View>
+
+            <Modal
+                transparent={true}
+                animationType='slide'
+                visible={isModalOpen}
+                onRequestClose={handleCloseModal}
+            >
+                <View style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                }}>
+                    <View style={{
+                        backgroundColor: 'white',
+                        padding: 20,
+                        borderRadius: 10,
+                        width: '80%',
+                    }}>
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.label}>Name</Text>
+                            <TextInput
+                                style={styles.input}
+                                value={userData?.userName}
+                                editable={false}
+                            />
+                        </View><View style={styles.inputGroup}>
+                            <Text style={styles.label}>Contact</Text>
+                            <TextInput
+                                style={styles.input}
+                                value={userData?.mobileNumber}
+                                editable={false}
+                            />
+                        </View>
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.label}>Number Of People</Text>
+                            <TextInput
+                                style={styles.input}
+                                value={ticketRequest.numberOfPeople ? ticketRequest.numberOfPeople.toString() : ""}
+                                onChangeText={(text) => setTicketRequest({ ...ticketRequest, numberOfPeople: Number(text) })}
+                                keyboardType='numeric'
+                            />
+                        </View>
+
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.label}>Date Of Journey</Text>
+                            <TouchableOpacity
+                                style={styles.input}
+                                onPress={() => setShowDepartureDatePicker(true)}
+                            >
+                                <Text>{ticketRequest.dateOfJourney ? formatDate(ticketRequest.dateOfJourney) : "Select Date"}</Text>
+                            </TouchableOpacity>
+                            {showDepartureDatePicker && (
+                                <DateTimePicker
+                                    value={ticketRequest.dateOfJourney || new Date()}
+                                    mode="date"
+                                    display="default"
+                                    onChange={onChangeDateOfJourney}
+                                />
+                            )}
+                        </View>
+
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.label}>Passenger Gender</Text>
+                            <View style={styles.pickerContainer}>
+                                <Picker
+                                    selectedValue={ticketRequest.passengerGender}
+                                    onValueChange={(itemValue) => setTicketRequest({ ...ticketRequest, passengerGender: itemValue })}
+                                    style={styles.picker}
+                                >
+                                    <Picker.Item label="Select Passenger Gender" value="" />
+                                    <Picker.Item label={"Male"} value={"MALE"} />
+                                    <Picker.Item label={"Female"} value={"FEMALE"} />
+                                    <Picker.Item label={"Family"} value={"FAMILY"} />
+                                </Picker>
+                            </View>
+                        </View>
+
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.label}>Departure</Text>
+                            <TextInput
+                                style={styles.input}
+                                value={route.departurePlace ? route.departurePlace : ""}
+                                editable={false}
+                            />
+                        </View>
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.label}>Arrival</Text>
+                            <TextInput
+                                style={styles.input}
+                                value={route.destinationPlace ? route.destinationPlace : ""}
+                                editable={false}
+                            />
+                        </View>
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.label}>Departure Time</Text>
+                            <TextInput
+                                style={styles.input}
+                                value={route.departureTime ? new Date(route.departureTime).toLocaleTimeString("en-US") : ""}
+                                editable={false}
+                            />
+                        </View>
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.label}>Arrival Time</Text>
+                            <TextInput
+                                style={styles.input}
+                                value={route.arrivalTime ? new Date(route.arrivalTime).toLocaleTimeString("en-US") : ""}
+                                editable={false}
+                            />
+                        </View>
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.label}>Bus Number</Text>
+                            <TextInput
+                                style={styles.input}
+                                value={route?.vehicle?.number}
+                                editable={false}
+                            />
+                        </View>
+                        <TouchableOpacity
+                            style={[styles.modalButton, { backgroundColor: Colors.darkBlue, marginTop: 5 }]}
+                            onPress={handleSendRequest}
+                        >
+                            {isLoading ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={[styles.modalButtonText, { color: "#fff" }]}>Send Interest</Text>
+                            )}
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
+            </Modal>
+
+            <Modal
+                transparent={true}
+                visible={isQRModalVisible === route._id}
+                animationType="slide"
+                onRequestClose={() => setIsQrModalVisible(null)}
+            >
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    }}
+                >
+                    <View
+                        style={{
+                            backgroundColor: 'white',
+                            padding: 20,
+                            borderRadius: 10,
+                            width: '80%',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Text style={{ fontSize: 16, marginBottom: 10 }}>
+                        </Text>
+                        <Image
+                            source={{ uri: route.QR }} // Replace with your QR code image URL
+                            style={{ width: 200, height: 200, marginBottom: 4 }}
+                        />
+                        <CustomButton
+                            title="Close"
+                            onPress={() => setIsQrModalVisible(null)}
+                        />
+                    </View>
+                </View>
+            </Modal>
+
+            <Modal
+                transparent={true}
+                visible={isChartModalVisible === route._id}
+                animationType="slide"
+                onRequestClose={() => setIsChartModalVisible(null)}
+            >
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    }}
+                >
+                    <View
+                        style={{
+                            backgroundColor: 'white',
+                            padding: 20,
+                            borderRadius: 10,
+                            width: '80%',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Text style={{ fontSize: 16, marginBottom: 10 }}>
+                            Here is your chart:
+                        </Text>
+                        <Image
+                            source={{ uri: route.seatingArrangement }} // Replace with your chart image URL
+                            style={{ width: 200, height: 200, marginBottom: 4 }}
+                        />
+                        <CustomButton
+                            title="Close"
+                            onPress={() => setIsChartModalVisible(null)}
+                        />
+                    </View>
+                </View>
+            </Modal>
 
 
 
@@ -515,7 +773,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     inputGroup: {
-        marginBottom: 15,
+        marginBottom: 5,
         width: "100%"
     },
     label: {
@@ -524,7 +782,7 @@ const styles = StyleSheet.create({
     },
     picker: {
         width: "100%",
-        height: 50,
+        height: 40,
         borderWidth: 1,
         borderColor: Colors.secondary,
         borderRadius: 5,
@@ -534,7 +792,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 10,
         paddingHorizontal: 10,
-        height: 40,
+        height: 35,
         justifyContent: 'center'
     },
     textarea: {
@@ -542,5 +800,11 @@ const styles = StyleSheet.create({
         maxHeight: 300,
         textAlignVertical: 'top',
         paddingTop: 10,
+    },
+    pickerContainer: {
+        borderColor: Colors.secondary,
+        borderWidth: 1,
+        borderRadius: 10,
+        overflow: 'hidden',
     },
 });
