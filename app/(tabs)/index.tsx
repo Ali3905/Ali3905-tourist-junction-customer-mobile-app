@@ -12,6 +12,8 @@ import * as Linking from 'expo-linking';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import * as SecureStore from "expo-secure-store";
 
+import { Ticket, TentTree, PersonStanding, CarFront, Wrench,Facebook , Car, FileCheck2, History, Handshake,Instagram  } from 'lucide-react-native';
+
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
@@ -77,27 +79,28 @@ export default function HomeScreen() {
   }
 
   return (
-    <GestureHandlerRootView style={styles.container}>
+    <GestureHandlerRootView style={styles.container} >
       <View style={{
         padding: 20,
-        backgroundColor: Colors.darkBlue,
+        backgroundColor: '#3086FF',
         flexDirection: "row",
         justifyContent: "space-between"
+        
       }}>
         <Text style={{ fontSize: 15, fontWeight: '500', color: "white" }}>Hi, {userData?.userName}</Text>
         {!isLogged ? <TouchableOpacity style={styles.loginButton} onPress={() => router.push('/signup')}>
           <Text>Signup</Text>
-        </TouchableOpacity> : <TouchableOpacity style={styles.loginButton} onPress={handleLogout}>
-          <Text>Logout</Text>
+        </TouchableOpacity> : <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Text style={{color:'#ffffff'}}>Logout</Text>
         </TouchableOpacity>}
       </View>
       <ScrollView>
         <View style={styles.logoContainer}>
-          <Image source={require('@/assets/images/logo.png')} style={styles.image} />
+          <Image source={require('@/assets/bg.png')} style={styles.image} />
         </View>
 
 
-        <View style={styles.carouselContainer}>
+        {/* <View style={styles.carouselContainer}>
           <Carousel
             width={deviceWidth * 0.9}
             height={deviceWidth * 0.6}
@@ -107,49 +110,61 @@ export default function HomeScreen() {
               <Image source={item} style={styles.carouselImage} />
             )}
           />
-        </View>
+        </View> */}
 
-        <View style={styles.dividerContainer}>
+        {/* <View style={styles.dividerContainer}>
           <View style={styles.divider}>
             <Text style={styles.dividerText}>Our Services</Text>
           </View>
-        </View>
+        </View> */}
 
         <View style={styles.grid}>
           <TouchableOpacity onPress={() => router.push('/bus_tickets')} style={styles.gridItem}>
-            <Image source={require('@/assets/images/route.png')} style={styles.icon} />
+            {/* <Image source={require('@/assets/images/route.png')} style={styles.icon} /> */}
+            <Ticket size={40} style={styles.icon} />
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Bus Tickets</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push('/holiday_yatra')} style={styles.gridItem}>
-            <Image source={require('@/assets/images/holiday_new.png')} style={styles.iconEmpty} />
+            {/* <Image source={require('@/assets/images/holiday_new.png')} style={styles.iconEmpty} /> */}
+            <TentTree size={40} style={styles.icon}/>
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Holiday's & Yatra</Text>
           </TouchableOpacity>
+
           <TouchableOpacity onPress={() => router.push('/drivers_all')} style={styles.gridItem}>
-            <Image source={require('@/assets/images/emergency-driver-icon.png')} style={styles.icon} />
+            {/* <Image source={require('@/assets/images/emergency-driver-icon.png')} style={styles.icon} /> */}
+            <PersonStanding size={40} style={styles.icon} />
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Drivers for you</Text>
           </TouchableOpacity>
+
           <TouchableOpacity onPress={() => router.push('/hire_vehicles')} style={styles.gridItem}>
-            <Image source={require('@/assets/images/staff_details.png')} style={styles.icon} />
-            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Hire Vehicles</Text>
+            {/* <Image source={require('@/assets/images/staff_details.png')} style={styles.icon} /> */}
+            <CarFront size={40} style={styles.icon} />
+            <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Vehicles on Rent</Text>
           </TouchableOpacity>
+
           <TouchableOpacity onPress={() => router.push('/technician_support')} style={styles.gridItem}>
-            <Image source={require('@/assets/images/technician_support.png')} style={styles.icon} />
+            {/* <Image source={require('@/assets/images/technician_support.png')} style={styles.icon} /> */}
+            <Wrench size={40} style={styles.icon}/>
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Technicians</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push('/vehicle_list')} style={styles.gridItem}>
-            <Image source={require('@/assets/images/vehicle_management.png')} style={styles.icon} />
+            {/* <Image source={require('@/assets/images/vehicle_management.png')} style={styles.icon} /> */}
+            <Car size={40} style={styles.icon} />
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Add my car</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push('/vehicle_documents')} style={styles.gridItem}>
-            <Image source={require('@/assets/images/vehicle_documents.png')} style={styles.icon} />
+            {/* <Image source={require('@/assets/images/vehicle_documents.png')} style={styles.icon} /> */}
+            <FileCheck2 size={40} style={styles.icon}/>
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Vehicle Documents</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push('/vehicle_servicing_history')} style={styles.gridItem}>
-            <Image source={require('@/assets/images/vehicle_servicing_history.png')} style={styles.icon} />
+            {/* <Image source={require('@/assets/images/vehicle_servicing_history.png')} style={styles.icon} /> */}
+            <History size={40} style={styles.icon}/>
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Vehicle Servicing History</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push('/sell_vehicle_list')} style={styles.gridItem}>
-            <Image source={require('@/assets/images/empty-vehicle-icon.png')} style={styles.iconEmpty} />
+            {/* <Image source={require('@/assets/images/empty-vehicle-icon.png')} style={styles.iconEmpty} /> */}
+            <Handshake size={40} style={styles.icon}/>
             <Text style={styles.iconText} numberOfLines={2} ellipsizeMode="tail">Sell Vehicles</Text>
           </TouchableOpacity>
 
@@ -157,7 +172,7 @@ export default function HomeScreen() {
 
         <View style={styles.dividerContainer}>
           <View style={styles.divider}>
-            <Text style={styles.dividerText}>Social Connect</Text>
+            <Text style={styles.dividerText}>Get in Touch</Text>
           </View>
         </View>
 
@@ -166,31 +181,33 @@ export default function HomeScreen() {
             style={styles.socialMediaIcon}
             onPress={() => Linking.openURL('https://www.instagram.com/touristjunctionpvtltd?igsh=MWlkZWY1aGtsc3U5Ng==')}
           >
-            <AntDesign name="instagram" size={24} color={Colors.primary} />
+            {/* <AntDesign name="instagram" size={24} color={Colors.primary} /> */}
+            <Instagram size={25} style={{color:'#dc143c'}}/>
             <Text style={styles.socialText}>Instagram</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.socialMediaIcon}
             onPress={() => Linking.openURL('https://www.facebook.com/profile.php?id=100077968170241&mibextid=kFxxJD')}
           >
-            <AntDesign name="facebook-square" size={24} color={Colors.primary} />
+            <AntDesign name="facebook-square" size={24} color={'#3086FF'} />
+            {/* <Facebook size={30} style={{color:'#3086FF'}} /> */}
             <Text style={styles.socialText}>Facebook</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.socialMediaIcon}
             onPress={() => Linking.openURL('https://youtube.com/@touristjunction4999?si=R80i9A17olOBrdzX')}
           >
-            <AntDesign name="youtube" size={24} color={Colors.primary} />
+            <AntDesign name="youtube" size={24} color={'#dc143c'} />
             <Text style={styles.socialText}>YouTube</Text>
           </TouchableOpacity>
         </View>
 
-        <View style={styles.dividerContainer}>
+        {/* <View style={styles.dividerContainer}>
           <View style={styles.divider}>
             <Text style={styles.dividerText}>Contact Us</Text>
           </View>
           <Text style={{ marginVertical: 10, marginTop: 17, fontSize: 15 }}>touristjunction8@gmail.com</Text>
-        </View>
+        </View> */}
       </ScrollView>
 
 
@@ -232,8 +249,24 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+     backgroundColor: 'rgba(245, 245, 35, 0.8)',
     marginTop: StatusBar.currentHeight,
+  },
+  gradientStart: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '50%', // Half the height for the first color
+    backgroundColor: '#f5f523',
+  },
+  gradientEnd: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '50%', // Half the height for the second color
+    backgroundColor: '#fa840e',
   },
   carouselContainer: {
     alignItems: 'center',
@@ -245,6 +278,13 @@ const styles = StyleSheet.create({
     borderRadius: 4
 
   },
+  logoutButton: {
+    backgroundColor: Colors.secondary,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 40,
+
+  },
 
   carouselImage: {
     height: deviceWidth * 0.5,
@@ -254,7 +294,7 @@ const styles = StyleSheet.create({
   dividerContainer: {
     marginHorizontal: 20,
     alignItems: 'center',
-    marginVertical: 10,
+    marginVertical: 20,
   },
   divider: {
     borderBottomWidth: 1,
@@ -262,20 +302,31 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'relative',
     alignItems: 'center',
+    borderRadius:100
   },
   dividerText: {
     position: 'absolute',
-    backgroundColor: '#ffffff',
-    paddingHorizontal: 5,
+    backgroundColor: '#3086FF',
+    paddingHorizontal: 10,
     top: -10,
-    color: '#00000',
-    fontWeight: '700'
+    color: '#fff',
+    fontWeight: '700',
+    borderRadius:100
   },
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginVertical: 20,
+    // marginVertical: 2,
+    borderRadius: 20,
+    borderColor: '#1F2657', // Border color
+    borderWidth: 1,
+    padding: 20,            // Increase padding for more spacing
+    marginHorizontal: 10,
+    // marginBottom: 20,       // Increase margin from the bottom to create overlap
+    zIndex: 10,             // Lower zIndex compared to the image
+    position: 'relative',
+    backgroundColor:'#3086FF'
   },
 
   gridItem: {
@@ -288,6 +339,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     resizeMode: 'contain',
+    color:'#ffffff'
   },
   iconEmpty: {
     width: 50,
@@ -297,15 +349,19 @@ const styles = StyleSheet.create({
   iconText: {
     marginTop: 5,
     fontSize: Math.min(12, deviceHeight * 0.02), // Larger and more dynamic font size for better readability
-    color: '#000', // Assuming the primary color is black
+    color: '#fff', // Assuming the primary color is black
     textAlign: 'center',
-    fontWeight: '500',
+    fontWeight: '200',
     width: '100%',
     flexWrap: 'wrap', // Ensuring text wraps correctly
   },
   logoContainer: {
-    alignItems: 'center',
-    marginVertical: 10,
+    // alignItems: 'center',
+    // marginVertical: 1,
+    // width: '100%', // Full width
+    height: 200,
+    // borderRadius: 20,
+    padding:10
   },
   buttonContainer: {
     alignItems: 'center',
@@ -451,8 +507,14 @@ const styles = StyleSheet.create({
     gap: 100
   },
   image: {
-    width: 200,
-    height: 150,
-    resizeMode: 'contain'
+    width: '100%',
+    height: '100%',
+    // resizeMode: 'contain',
+    borderRadius: 20,
+    paddingHorizontal:10
+    
   },
+
+
+
 });

@@ -10,7 +10,7 @@ const CustomButton = ({ onPress, title }: CustomButtonProps) => {
   return (
     <TouchableOpacity
       style={{
-        backgroundColor: 'skyblue',
+        backgroundColor: 'rgba(245, 245, 35, 0.8)',
         paddingVertical: 5,
         paddingHorizontal: 10,
         borderRadius: 5,
@@ -20,7 +20,7 @@ const CustomButton = ({ onPress, title }: CustomButtonProps) => {
     >
       <Text
         style={{
-          color: 'white',
+          color: '#000',
           fontSize: 12,
           fontWeight: 'bold',
         }}
